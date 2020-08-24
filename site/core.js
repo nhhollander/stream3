@@ -11,7 +11,8 @@ function stream_init() {
         "websocket": {
             "noconnect": false, // Debug
             "address": "wss://waffle.internal.crumbcake.cc:4433",
-            "show_warning_timeout": 10000
+            "connect_timeout": 2000,
+            "show_warning_timeout": 4000
         }
     }
     window.core = new Core(config); // Save to global for debugging
