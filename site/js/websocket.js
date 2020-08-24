@@ -10,6 +10,8 @@ class WebSocketManager {
         this.socket = undefined;
         this.retry_timeout = 1;
 
+        this.connected = false;
+
         this.connect();
     }
 
@@ -26,10 +28,13 @@ class WebSocketManager {
     onopen(event) {
         console.log("The websocket connection has been opened");
         this.retry_timeout = 1;
+        this.connected = true;
+        this.core.send_event("ws_open");
     }
 
     onclose(event) {
         console.log(`The websocket connection has been closed.  Retrying connection in ${this.retry_timeout} seconds`);
+        this.connected = false;
         setTimeout(this.connect.bind(this), this.retry_timeout * 1000);
         if(this.retry_timeout < 10) {
             this.retry_timeout += 1;

@@ -1,0 +1,52 @@
+/* Style for the authentication window */
+
+div.auth {
+    position: fixed;
+    width: 8cm;
+    height: 10cm;
+    top: 50vh; left: 50vw;
+    transform: translate(-50%,-50%);
+
+    background-color: white;
+    border: 1px solid rgba(0,0,0,.5);
+    border-radius: 1mm;
+    overflow: hidden;
+    opacity: 1;
+
+    transition: transform .5s, opacity .5s;
+}
+div.auth.hidden {
+    transform: translate(-50%,-50%) translateY(-1cm);
+    opacity: 0;
+}
+div.auth>div.head {
+    height: 1.5cm;
+    line-height: 1.5cm;
+    border-bottom: 1px solid rgba(0,0,0,.5);
+    font-weight: bold;
+    text-align: center;
+    font-size: 140%;
+    box-sizing: border-box;
+}
+div.auth>div.body {
+    height: 7cm;
+    padding: 2mm;
+    box-sizing: border-box;
+}
+div.auth>div.body>input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+div.auth>div.body>div.error {
+    color: red;
+    text-align: center;
+    margin-top: 2mm;
+}
+div.auth>div.foot {
+    height: 1.5cm;
+    line-height: 1.5cm;
+    border-top: 1px solid rgba(0,0,0,.5);
+    text-align: center;
+    box-sizing: border-box;
+}

@@ -1,6 +1,7 @@
 /* Master file for the streaming server.  All dynamic components of the page
  * are loaded and controlled from here. */
 
+import { Auth } from "./js/auth.js"
 import { Messages } from "./js/messages.js"
 import { WebSocketManager } from "./js/websocket.js"
 
@@ -24,7 +25,30 @@ class Core {
     
     constructor(config) {
         this.config = config;
+
+        this.handlers = {}
+
+        this.auth = new Auth(this.config, this);
         this.messages = new Messages(this.config, this);
         this.websocket = new WebSocketManager(this.config, this);
+
+    }
+
+    register_handler(event, callback) {
+        if(!(event in this.handlers)) {
+            this.handlers[event] = []
+        }
+        this.handlers[event].push(callback)
+    }
+
+    send_event(event, data=null) {
+        if(!event in this.handlers) {
+            console.error(`Warning: Event [${event}] not handled!`);
+            return;
+        }
+        for(const handler of this.handlers[event]) {
+            // TODO: Catch exceptions maybe
+            handler(data);
+        }
     }
 }

@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>CRUMBFLIX</title>
+        <title>Crumbflix</title>
         <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
         <link rel="stylesheet" href="core.css">
         <script src="core.js" type="module"></script>
@@ -19,6 +19,21 @@
         <!-- MESSAGES -->
         <div class="messagebar" id="messagebar">
             <div style="height: 100%"></div> <!-- Vertical space filler -->
+        </div>
+
+        <!-- AUTH -->
+        <div class="auth" id="auth">
+            <div class="head">AUTHENTICATION</div>
+            <div class="body">
+                Nickname:
+                <input id="auth_nickname"><br>
+                Key:
+                <input id="auth_key">
+                <div class="error" id="auth_error"></div>
+            </div>
+            <div class="foot">
+                <button id="auth_submit" disabled>Submit</button>
+            </div>
         </div>
 
     </body>
