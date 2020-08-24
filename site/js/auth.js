@@ -16,6 +16,8 @@ class Auth {
         this.elem_key = document.getElementById("auth_key");
         this.elem_submit = document.getElementById("auth_submit");
         this.elem_error = document.getElementById("auth_error");
+        this.elem_hello = document.getElementById("hello");
+        this.elem_hellonick = document.getElementById("nickname");
 
         this.core.register_handler("message_auth", this.callback.bind(this));
         this.core.register_handler("ws_open", this.ws_open.bind(this));
@@ -72,6 +74,8 @@ class Auth {
         }
         if(data['success']) {
             this.authwindow.className = "auth hidden";
+            this.elem_hello.style.display = "block";
+            this.elem_hellonick.innerText = this.elem_nickname.value;
             setTimeout(function() {
                 this.authwindow.style.display = "none"
             }.bind(this), 500);
@@ -79,7 +83,7 @@ class Auth {
             this.authwindow.style.display = "block";
             this.authwindow.className = "auth";
             this.elem_error.innerText = data["message"];
-
+            this.elem_submit.disabled = false;
         }
     }
 
