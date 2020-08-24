@@ -10,6 +10,8 @@ class WebSocketManager {
         this.socket = undefined;
         this.retry_timeout = 1;
 
+        this.connectionstatuswarning = document.getElementById("wswarning");
+
         this.connected = false;
 
         this.connect();
@@ -23,6 +25,11 @@ class WebSocketManager {
         this.socket.onclose = this.onclose.bind(this);
         this.socket.onmessage = this.onmessage.bind(this);
         this.socket.onerror = this.onerror.bind(this);
+        setTimeout(function() {
+            if(this.connected) { return; }
+            console.error("Connection attempt timeout! Killing...");
+            this.socket.close()
+        }.bind(this), 2000);
     }
 
     onopen(event) {
@@ -30,12 +37,16 @@ class WebSocketManager {
         this.retry_timeout = 1;
         this.connected = true;
         this.core.send_event("ws_open");
+        this.connectionstatuswarning.className = "connectionstatuswarning hidden";
     }
 
     onclose(event) {
         console.log(`The websocket connection has been closed.  Retrying connection in ${this.retry_timeout} seconds`);
         this.connected = false;
         setTimeout(this.connect.bind(this), this.retry_timeout * 1000);
+        if(this.retry_timeout > 2) {
+            this.connectionstatuswarning.className = "connectionstatuswarning";
+        }
         if(this.retry_timeout < 10) {
             this.retry_timeout += 1;
         }
