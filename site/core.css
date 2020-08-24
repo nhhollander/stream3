@@ -1,0 +1,8 @@
+/* This is the core CSS file.  All other CSS files are loaded from this file. */
+
+@import "css/background.css";
+@import "css/messages.css";
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}

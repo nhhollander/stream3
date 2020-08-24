@@ -1,0 +1,47 @@
+/* Styles for message boxes */
+
+div.messagebar {
+    position: fixed;
+    top: 0; right: 0;
+    height: 100vh; width: 10cm;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+div.messagebar::-webkit-scrollbar {
+    display: none;
+}
+div.messagebar>.message {
+    background-color: rgba(0,0,0,.4);
+    border-radius: 1.5mm;
+    padding: 2mm;
+    float: right;
+    text-align: left;
+    animation-name: message_flyout;
+    animation-duration: 10s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    margin-bottom: 2mm;
+    margin-right: 2mm;
+    color: white;
+}
+div.messagebar>.message>.from {
+    font-weight: bold;
+    margin-bottom: 1.5mm;
+}
+
+@keyframes message_flyout {
+    0% {
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    90% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(2cm);
+        opacity: 0;
+    }
+}
