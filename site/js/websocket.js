@@ -10,7 +10,7 @@ class WebSocketManager {
         this.socket = undefined;
         this.retry_timeout = 1;
 
-        this.connectionstatuswarning = document.getElementById("wswarning");
+        this.connection_status_warning = document.getElementById("wswarning");
 
         this.connected = false;
 
@@ -36,17 +36,15 @@ class WebSocketManager {
         console.log("The websocket connection has been opened");
         this.retry_timeout = 1;
         this.connected = true;
+        this.stop_connection_warning();
         this.core.send_event("ws_open");
-        this.connectionstatuswarning.className = "connectionstatuswarning hidden";
     }
 
     onclose(event) {
         console.log(`The websocket connection has been closed.  Retrying connection in ${this.retry_timeout} seconds`);
         this.connected = false;
+        this.start_connection_warning();
         setTimeout(this.connect.bind(this), this.retry_timeout * 1000);
-        if(this.retry_timeout > 2) {
-            this.connectionstatuswarning.className = "connectionstatuswarning";
-        }
         if(this.retry_timeout < 10) {
             this.retry_timeout += 1;
         }
@@ -64,6 +62,23 @@ class WebSocketManager {
 
     send_object(object) {
         this.socket.send(JSON.stringify(object));
+    }
+
+    start_connection_warning() {
+        if(this.connection_status_warning_started) { return; }
+        console.log(`Showing connection status warning in ${this.config['show_warning_timeout']}ms`);
+        this.connection_status_warning_started = true;
+        this.connection_status_warning_timeout = setTimeout(function() {
+            this.connection_status_warning.className = "connectionstatuswarning";
+        }.bind(this), this.config['show_warning_timeout']);
+    }
+
+    stop_connection_warning() {
+        if(!this.connection_status_warning_started) { return; }
+        console.log(`Stopping show connection status warning`);
+        this.connection_status_warning.className = "connectionstatuswarning hidden";
+        this.connection_status_warning_started = false;
+        clearTimeout(this.connection_status_warning_timeout);
     }
 
 }
