@@ -54,6 +54,11 @@ class Auth {
         let nickname = this.elem_nickname.value;
         let key = this.elem_key.value;
         console.log(`Submit: [${nickname}] [${key}]`);
+        this.core.websocket.send_object({
+            "type": "auth",
+            "name": nickname,
+            "key": key
+        });
     }
 
     ws_open() {

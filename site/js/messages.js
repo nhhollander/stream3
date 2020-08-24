@@ -11,6 +11,8 @@ class Messages {
 
         this.messagebar = document.getElementById("messagebar");
 
+        this.core.register_handler("message_message", this.handle_message.bind(this));
+
         setInterval(function() {
             this.messagebar.scrollBy(0,1);
         }.bind(this), 3);
@@ -20,6 +22,15 @@ class Messages {
         let t = document.createElement("div");
         t.innerText = unsafe;
         return t.innerHTML;
+    }
+
+    handle_message(data) {
+        console.log(data);
+        if(!("from" in data) || !("class" in data) || !("message" in data) || !("allowhtml" in data)) {
+            console.error("Badly formatted message!");
+            return;
+        }
+        this.show_message(data["from"], data["class"], data["message"], data["allowhtml"]);
     }
 
     show_message(from, message_class, text, allow_html) {

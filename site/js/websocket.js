@@ -43,10 +43,16 @@ class WebSocketManager {
 
     onmessage(event) {
         console.log("A websocket message has been received");
+        let data = JSON.parse(event.data);
+        this.core.send_event(`message_${data['type']}`, data);
     }
 
     onerror(event) {
         console.log("The websocket connection has encountered an error");
+    }
+
+    send_object(object) {
+        this.socket.send(JSON.stringify(object));
     }
 
 }

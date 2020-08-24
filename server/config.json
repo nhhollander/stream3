@@ -1,0 +1,20 @@
+{
+    "wsserver": {
+        "host": "",
+        "port": 4433,
+        "certfile": "/home/nicholas/cert/out/waffle.internal.crumbcake.cc.crt",
+        "keyfile": "/home/nicholas/cert/out/waffle.internal.crumbcake.cc.key"
+    },
+    "auth": {
+        "keys": {
+            "testkey": {
+                "namepattern": ".*",
+                "permissions": []
+            },
+            "adminkey": {
+                "namepattern": "crumbcake",
+                "permissions": ["*"]
+            }
+        }
+    }
+}

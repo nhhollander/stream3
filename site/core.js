@@ -9,7 +9,7 @@ function stream_init() {
     let config = {
         "messages": {},
         "websocket": {
-            "noconnect": true, // Debug
+            "noconnect": false, // Debug
             "address": "wss://waffle.internal.crumbcake.cc:4433"
         }
     }
