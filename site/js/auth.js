@@ -79,7 +79,7 @@ class Auth {
         }
         if(data['success']) {
             this.authwindow.className = "auth hidden";
-            this.elem_hello.style.display = "block";
+            this.elem_hello.className = "hello";
             this.elem_hellonick.innerText = this.elem_nickname.value;
             setTimeout(function() {
                 this.authwindow.style.display = "none"
@@ -89,6 +89,7 @@ class Auth {
             this.authwindow.className = "auth";
             this.elem_error.innerText = data["message"];
             this.elem_submit.disabled = false;
+            this.elem_hello.className = "hello hidden";
         }
     }
 
