@@ -50,7 +50,7 @@ class User:
             self.send_object({
                 "type": "authresult",
                 "success": True,
-                "message": ""
+                "message": "Authentication Successful"
             })
             self.send_system_message(f"Welcome <b>{data['name']}</b>!", True)
             self.core.send_system_message_to_all(f"<b>{data['name']}</b> has connected!", True)

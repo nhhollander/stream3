@@ -29,7 +29,6 @@ class Messages {
     }
 
     show_message(from, message_class, text, allow_html) {
-        // Create the message
         let message = document.createElement("div");
         message.className = `message message_${message_class}`;
         let head = document.createElement("div");
