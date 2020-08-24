@@ -1,0 +1,28 @@
+{
+    "required": ["type","from","class","message","allowhtml"],
+    "properties": {
+        "type": {
+            "type": "string",
+            "const": "message"
+        },
+        "from": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+        },
+        "class": {
+            "type": "string",
+            "enum": [
+                "system",
+                "chat"
+            ]
+        },
+        "message": {
+            "type": "string"
+        },
+        "allowhtml": {
+            "type": "boolean"
+        }
+    },
+    "additionalProperties": false
+}

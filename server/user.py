@@ -19,9 +19,10 @@ class User:
 
     def onmessage(self, data):
         message = json.loads(data)
-        # Sanity check the message
-        if not "type" in message:
-            print(f"Error: Message has no type")
+        # Validate the message
+        if not self.core.validator.validate(message):
+            print("Received invalid message, dropping")
+            return
         print(json.dumps(message, indent=2))
 
         if(message['type'] == "auth"):
@@ -34,19 +35,11 @@ class User:
             self.core.send_system_message_to_all(f"<b>{self.name}</b> has disconnected", True)
 
     def auth(self, data):
-        if not "name" in data or not "key" in data:
-            print("Invalid auth message, missing required fields")
-            self.send_object({
-                "type": "auth",
-                "success": False,
-                "message": "Invalid authentication message"
-            })
-            return
         result = self.core.auth.authenticate(data["name"], data["key"], self)
         if result == False:
             print(f"User presenting as [{data['name']}] failed authentication")
             self.send_object({
-                "type": "auth",
+                "type": "authresult",
                 "success": False,
                 "message": "Authentication Failure"
             })
@@ -55,7 +48,7 @@ class User:
             self.authdata = result
             self.authenticated = True
             self.send_object({
-                "type": "auth",
+                "type": "authresult",
                 "success": True,
                 "message": ""
             })
@@ -71,6 +64,9 @@ class User:
             "allowhtml": allowhtml
         })
 
-    def send_object(self, object):
-        self.socket.sendMessage(json.dumps(object))
+    def send_object(self, obj):
+        if not self.core.validator.validate(obj):
+            print("Sending invalid message, dropping")
+            return
+        self.socket.sendMessage(json.dumps(obj))
         

@@ -25,18 +25,12 @@ class WebSocketManager {
         this.socket.onclose = this.onclose.bind(this);
         this.socket.onmessage = this.onmessage.bind(this);
         this.socket.onerror = this.onerror.bind(this);
-        this.connect_timeout = setTimeout(function() {
-            if(this.connected) { return; }
-            console.error("Connection attempt timeout! Killing...");
-            this.socket.close()
-        }.bind(this), this.config['connect_timeout']);
     }
 
     onopen(event) {
         console.log("The websocket connection has been opened");
         this.retry_timeout = 1;
         this.connected = true;
-        clearTimeout(this.connect_timeout);
         this.stop_connection_warning();
         this.core.send_event("ws_open");
     }
@@ -59,7 +53,6 @@ class WebSocketManager {
 
     onerror(event) {
         console.log("The websocket connection has encountered an error");
-        clearTimeout(this.connect_timeout);
     }
 
     send_object(object) {

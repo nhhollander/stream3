@@ -1,0 +1,18 @@
+{
+    "required": ["type","success","message"],
+    "properties": {
+        "type": {
+            "type": "string",
+            "const": "authresult"
+        },
+        "success": {
+            "type": "boolean"
+        },
+        "message": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 128
+        }
+    },
+    "additionalProperties": false
+}

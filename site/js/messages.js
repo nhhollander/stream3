@@ -25,11 +25,6 @@ class Messages {
     }
 
     handle_message(data) {
-        console.log(data);
-        if(!("from" in data) || !("class" in data) || !("message" in data) || !("allowhtml" in data)) {
-            console.error("Badly formatted message!");
-            return;
-        }
         this.show_message(data["from"], data["class"], data["message"], data["allowhtml"]);
     }
 

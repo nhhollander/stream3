@@ -1,0 +1,7 @@
+{
+    "type": "message",
+    "from": "SYSTEM",
+    "class": "system",
+    "message": "This is a test message for schema validation",
+    "allowhtml": false
+}

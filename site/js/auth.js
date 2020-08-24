@@ -19,7 +19,7 @@ class Auth {
         this.elem_hello = document.getElementById("hello");
         this.elem_hellonick = document.getElementById("nickname");
 
-        this.core.register_handler("message_auth", this.callback.bind(this));
+        this.core.register_handler("message_authresult", this.callback.bind(this));
         this.core.register_handler("ws_open", this.ws_open.bind(this));
         this.core.register_handler("ws_close", this.ws_close.bind(this));
 
@@ -73,10 +73,6 @@ class Auth {
     }
 
     callback(data) {
-        if(!("success" in data) || !("message" in data)) {
-            console.error("Invalid auth response");
-            return;
-        }
         if(data['success']) {
             this.authwindow.className = "auth hidden";
             this.elem_hello.className = "hello";

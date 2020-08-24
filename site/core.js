@@ -9,9 +9,7 @@ function stream_init() {
     let config = {
         "messages": {},
         "websocket": {
-            "noconnect": false, // Debug
             "address": "wss://waffle.internal.crumbcake.cc:4433",
-            "connect_timeout": 2000,
             "show_warning_timeout": 4000
         }
     }
@@ -44,7 +42,7 @@ class Core {
     }
 
     send_event(event, data=null) {
-        if(!event in this.handlers) {
+        if(!(event in this.handlers)) {
             console.error(`Warning: Event [${event}] not handled!`);
             return;
         }

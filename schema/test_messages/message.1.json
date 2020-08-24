@@ -1,0 +1,7 @@
+{
+    "type": "message",
+    "from": "Steve the Test User",
+    "class": "chat",
+    "message": "Howdy, my name is steve!",
+    "allowhtml": false
+}
