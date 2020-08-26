@@ -1,0 +1,20 @@
+/* Make input elements look consistent between Firefox and Chrome */
+
+input[type="text"] {
+    padding-left: 3mm;
+    height: 1cm;
+    line-height: 1cm;
+    border: 1px solid rgba(0,0,0,.75);
+    border-radius: 1mm;
+    font-size: 4mm;
+}
+input[type="text"]:disabled {
+    background-color: rgba(0,0,0,.1);
+    color: rgba(0,0,0,.3);
+}
+
+button {
+    width: 3cm;
+    padding: 2mm;
+    font-size: 4mm;
+}

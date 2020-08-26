@@ -59,6 +59,7 @@ div.hello {
     text-shadow: 0 0 5px rgba(0,0,0,.9);
     opacity: 1;
     transition: opacity .5s;
+    color: #ABABAB;
 }
 div.hello.hidden {
     opacity: 0;
