@@ -13,9 +13,9 @@ class Messages {
 
         this.core.register_handler("message_message", this.handle_message.bind(this));
 
-        /*setInterval(function() {
-            this.messagebar.scrollBy(0,100);
-        }.bind(this), 3);*/
+        setInterval(function() {
+            this.messagebar.scrollBy(0,1);
+        }.bind(this), 3);
     }
 
     strip_html(unsafe) {
@@ -44,7 +44,6 @@ class Messages {
         }
         message.appendChild(body);
         this.messagebar.appendChild(message);
-        this.messagebar.scrollBy(0,1000);
         setTimeout(function() {
             /* After a brief pause, calculate the height of this element.  This
              * allows the element to be smoothly shrunk out of existence at the
@@ -52,7 +51,8 @@ class Messages {
             let height = this.getBoundingClientRect().height;
             let cstyle = getComputedStyle(this);
             height += parseInt(cstyle['margin-bottom']);
-            this.style.setProperty('--msgyeet', `${height*-1}px`);
+            // Weird graphical bug causes jerky motion >:(
+            //this.style.setProperty('--msgyeet', `${height*-1}px`);
         }.bind(message), 100);
         // Hide
         console.log(`Showing message for [${duration}] ${Math.max(duration,200)}ms`);

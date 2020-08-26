@@ -6,7 +6,7 @@ div.messagebar {
     height: 100vh; width: 10cm;
     overflow-y: scroll;
     scrollbar-width: none;
-    scroll-behavior: smooth;
+    /*scroll-behavior: smooth;*/
 }
 div.messagebar::-webkit-scrollbar {
     display: none;
