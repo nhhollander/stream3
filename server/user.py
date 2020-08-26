@@ -56,7 +56,9 @@ class User:
             self.send_system_message(f"Welcome <b>{data['name']}</b>!", True)
             self.core.send_system_message_to_all(f"<b>{data['name']}</b> has connected!", True)
 
-    def send_system_message(self, message, allowhtml, duration=2000):
+    def send_system_message(self, message, allowhtml, duration=-1):
+        if duration < 0:
+            duration = self.config["client"]["default_message_duration"]
         self.send_object({
             "type": "message",
             "from": "SYSTEM",

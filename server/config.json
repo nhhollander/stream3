@@ -16,5 +16,8 @@
                 "permissions": ["*"]
             }
         }
+    },
+    "client": {
+        "default_message_duration": 5000
     }
 }
