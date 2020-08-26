@@ -42,12 +42,12 @@ class Core:
             for user in self.users:
                 user.send_object(obj)
 
-    def send_system_message_to_all(self, message, allowhtml, authenticated_only=True):
+    def send_system_message_to_all(self, message, allowhtml, duration=6000, authenticated_only=True):
         if authenticated_only:
             for user in self.get_authenticated_users():
-                user.send_system_message(message, allowhtml)
+                user.send_system_message(message, allowhtml, duration)
         else:
             for user in self.users:
-                user.send_system_message(message, allowhtml)
+                user.send_system_message(message, allowhtml, duration)
 
     

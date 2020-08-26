@@ -44,7 +44,8 @@ class User:
                 "message": "Authentication Failure"
             })
         else:
-            print(f"User [{data['name']}] has authenticated!")
+            self.name = data['name']
+            print(f"User [{self.name}] has authenticated!")
             self.authdata = result
             self.authenticated = True
             self.send_object({
@@ -55,13 +56,14 @@ class User:
             self.send_system_message(f"Welcome <b>{data['name']}</b>!", True)
             self.core.send_system_message_to_all(f"<b>{data['name']}</b> has connected!", True)
 
-    def send_system_message(self, message, allowhtml):
+    def send_system_message(self, message, allowhtml, duration=2000):
         self.send_object({
             "type": "message",
             "from": "SYSTEM",
             "class": "system",
             "message": message,
-            "allowhtml": allowhtml
+            "allowhtml": allowhtml,
+            "duration": duration
         })
 
     def send_object(self, obj):

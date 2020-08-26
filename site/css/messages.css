@@ -6,6 +6,7 @@ div.messagebar {
     height: 100vh; width: 10cm;
     overflow-y: scroll;
     scrollbar-width: none;
+    scroll-behavior: smooth;
 }
 div.messagebar::-webkit-scrollbar {
     display: none;
@@ -16,32 +17,53 @@ div.messagebar>.message {
     padding: 2mm;
     float: right;
     text-align: left;
-    animation-name: message_flyout;
-    animation-duration: 10s;
+    animation-name: message_flyin;
+    animation-duration: .5s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
     margin-bottom: 2mm;
     margin-right: 2mm;
     color: white;
+    min-width: 5.01cm;
+}
+div.messagebar>.message.hidden {
+    animation-name: message_flyout;
+    animation-duration: 1s;
 }
 div.messagebar>.message>.from {
     font-weight: bold;
     margin-bottom: 1.5mm;
 }
 
-@keyframes message_flyout {
+@keyframes message_flyin {
     0% {
         opacity: 0;
     }
-    5% {
+    100% {
         opacity: 1;
     }
-    90% {
-        transform: translateX(0);
+}
+@keyframes message_flyout {
+    0% {
         opacity: 1;
+        transform: translateX(0);
+        margin-top: 0;
+    }
+    50% {
+        opacity: 0;
+        transform: translateX(2cm);
+        margin-top: 0;
     }
     100% {
-        transform: translateX(2cm);
         opacity: 0;
+        transform: translateX(2cm);
+        margin-top: var(--msgyeet);
     }
+}
+
+div.messagebar>.message.message_system {
+    border: 2px solid red;
+}
+div.messagebar>.message.message_system>.from {
+    color: red;
 }

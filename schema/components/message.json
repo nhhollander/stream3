@@ -1,5 +1,5 @@
 {
-    "required": ["type","from","class","message","allowhtml"],
+    "required": ["type","from","class","message","allowhtml","duration"],
     "properties": {
         "type": {
             "type": "string",
@@ -24,6 +24,10 @@
         },
         "allowhtml": {
             "type": "boolean"
+        },
+        "duration": {
+            "type": "integer",
+            "min": 200
         }
     },
     "additionalProperties": false
