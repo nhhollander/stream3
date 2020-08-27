@@ -21,3 +21,37 @@ div.videoplayer>video {
 div.videoplayer[active="true"]>video {
     opacity: 1;
 }
+
+div.controlbar {
+    position: fixed;
+    bottom: 0; left: 50vw;
+    width: 20cm; height: 2cm;
+    opacity: .1;
+    transform: translate(-50%, 1.7cm);
+    transition: transform .25s, opacity .25s;
+}
+div.controlbar[visible="true"] {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+div.controlbar>div.nub {
+    width: 3cm; height: 3mm;
+    background-color: white;
+    border-radius: 3mm 3mm 0 0;
+    border: 1px solid rgba(0,0,0,.75);
+    border-bottom: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+div.controlbar>div.body {
+    border: 1px solid rgba(0,0,0,.75);
+    border-radius: 2mm 2mm 0 0;
+    box-sizing: border-box;
+    background-color: white;
+    padding: 2mm;
+    height: 1.7cm;
+}
+div.controlbar>div.body>button {
+    height: 1.3cm;
+    padding: 2mm;
+}

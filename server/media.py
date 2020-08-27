@@ -39,7 +39,7 @@ class Media:
         elif cmd == "play":
             if not self.mediastate == "pause":
                 print(f"User [{user.name}] attempted to start playback, but media was not paused")
-                user.send_system_message("Unable to play: Media is not paused")
+                user.send_system_message("Unable to play: Media is not paused",False)
                 return
             self.play()
             print(f"User [{user.name}] started playback")
@@ -47,7 +47,7 @@ class Media:
         elif cmd == "pause":
             if not self.mediastate == "play":
                 print(f"User [{user.name}] attempted to pause playback, but media was not playing")
-                user.send_system_message("Unable to pause: Media is not playing")
+                user.send_system_message("Unable to pause: Media is not playing",False)
                 return
             self.pause()
             print(f"User [{user.name}] paused playback")
@@ -55,7 +55,7 @@ class Media:
         elif cmd == "stop":
             if self.mediastate == "stop":
                 print(f"User [{user.name}] attempted to stop playback, but media was not playing")
-                user.send_system_message("Unable to stop: Media is not playing")
+                user.send_system_message("Unable to stop: Media is not playing",False)
                 return
             self.stop()
             print(f"User [{user.name}] stopped playback")

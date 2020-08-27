@@ -77,6 +77,7 @@ class Auth {
             this.authwindow.className = "auth hidden";
             this.elem_hello.className = "hello";
             this.elem_hellonick.innerText = this.elem_nickname.value;
+            this.authenticated = true;
             setTimeout(function() {
                 this.authwindow.style.display = "none"
             }.bind(this), 500);

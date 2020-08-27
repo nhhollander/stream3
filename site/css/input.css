@@ -12,9 +12,3 @@ input[type="text"]:disabled {
     background-color: rgba(0,0,0,.1);
     color: rgba(0,0,0,.3);
 }
-
-button {
-    width: 3cm;
-    padding: 2mm;
-    font-size: 4mm;
-}

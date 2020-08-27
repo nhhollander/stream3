@@ -39,6 +39,11 @@ div.auth>div.body>input {
     width: 100%;
     box-sizing: border-box;
 }
+div.auth>div.body>button {
+    width: 3cm;
+    padding: 2mm;
+    font-size: 4mm;
+}
 div.auth>div.body>div.error {
     color: red;
     text-align: center;
