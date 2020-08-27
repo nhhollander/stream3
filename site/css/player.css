@@ -51,7 +51,21 @@ div.controlbar>div.body {
     padding: 2mm;
     height: 1.7cm;
 }
-div.controlbar>div.body>button {
+
+div.controlbar[admin="true"]>div.body.userpanel {
+    display: none
+}
+div.controlbar[admin="true"]>div.body.adminpanel {
+    display: block;
+}
+div.controlbar[admin="false"]>div.body.userpanel {
+    display: block;
+}
+div.controlbar[admin="false"]>div.body.adminpanel {
+    display: none;
+}
+
+div.controlbar[admin="true"]>div.body>button {
     height: 1.3cm;
     padding: 2mm;
 }

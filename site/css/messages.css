@@ -69,8 +69,8 @@ div.messagebar>.message.message_system>.from {
 }
 
 div.messagebar>.message.message_client {
-    border: 2px solid rgba(0,0,0,.8);
+    border: 2px solid rgba(255,255,255,.8);
 }
 div.messagebar>.message.message_client>.from {
-    color: rgba(0,0,0,.8);
+    color: rgba(255,255,255,.8);
 }

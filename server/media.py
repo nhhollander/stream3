@@ -32,7 +32,7 @@ class Media:
             seconds = message['seconds']
             ss = seconds % 60
             mm = int(seconds / 60) % 60
-            hh = mm / 60
+            hh = int(seconds / 360)
             self.set_media_time(seconds)
             print(f"User [{user.name}] set the playback time to [{hh}:{mm}:{ss}]")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> set time to <b>{hh}:{mm}:{ss}</b>",True)
@@ -89,6 +89,11 @@ class Media:
 
     def set_media_time(self, t):
         self.mediatime = (time.time(), t)
+        self.core.send_object_to_all({
+            "type": "media",
+            "command": "settime",
+            "seconds": t
+        })
 
     def update_media_time(self):
         self.set_media_time(self.get_media_time())

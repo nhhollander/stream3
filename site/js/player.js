@@ -13,18 +13,22 @@ class VideoPlayer {
 
         this.controlbar = document.getElementById("controlbar");
         this.controlnub = document.getElementById("controlnub");
-        this.button_selectmedia = document.getElementById("cb_setmedia");
-        this.button_play = document.getElementById("cb_play");
-        this.button_pause = document.getElementById("cb_pause");
-
         this.controlnub.addEventListener("mouseenter", this.control_nub_hover.bind(this));
         this.controlbar.addEventListener("mouseleave", this.control_bar_leave.bind(this));
-        this.button_selectmedia.addEventListener("click", this.cb_select_media.bind(this));
-        this.button_play.addEventListener("click", this.play.bind(this));
-        this.button_pause.addEventListener("click", this.pause.bind(this));
+
+        // Admin panel
+        document.getElementById("cb_admin_setmedia").addEventListener("click", this.cb_select_media.bind(this));
+        document.getElementById("cb_admin_play").addEventListener("click", this.play.bind(this));
+        document.getElementById("cb_admin_pause").addEventListener("click", this.pause.bind(this));
+        document.getElementById("cb_admin_sync").addEventListener("click", this.cb_sync_to_me.bind(this));
+        // User panel
+
+        document.body.addEventListener("keydown", this.keydown.bind(this))
 
         this.core.register_handler("message_media", this.handle_message.bind(this));
     }
+
+    // Handlers //
 
     handle_message(data) {
         switch(data["command"]) {
@@ -33,10 +37,13 @@ class VideoPlayer {
                 this.frame.setAttribute("active","true");
                 break;
             case "settime":
+                console.log("Fun time!");
                 this.video.currentTime = data["seconds"];
                 break;
             case "play":
-                this.video.play();
+                this.video.play().catch(function() {
+                    this.core.messages.show_message("CLIENT","client","Media playback failed!  Check your autoplay settings!",false,3000);
+                }.bind(this));
                 this.frame.setAttribute("active","true");
                 break;
             case "pause":
@@ -45,8 +52,32 @@ class VideoPlayer {
             case "stop":
                 this.video.src = "";
                 this.frame.setAttribute("active","false");
+            default:
+                this.core.messages.show_message("CLIENT","client","Server sent bad media command",false,3000);
+                console.log(`Bad media command [${data["command"]}]`);
         }
     }
+
+    keydown(data) {
+        if(data.key == "F4") {
+            if(this.controlbar.getAttribute("admin") == "false") {
+                this.controlbar.setAttribute("admin","true");
+            } else {
+                this.controlbar.setAttribute("admin","false");
+            }
+        }
+    }
+
+    cb_sync_to_me(data) {
+        let current_time = this.video.currentTime;
+        this.core.websocket.send_object({
+            "type": "media",
+            "command": "settime",
+            "seconds": current_time
+        });
+    }
+
+    // Media control methods //
 
     setsource(source) {
         this.core.websocket.send_object({
@@ -84,6 +115,7 @@ class VideoPlayer {
 
     cb_select_media() {
         let media = prompt("Enter URI:");
+        // I stole this regular expression from some website lol
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
             '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
