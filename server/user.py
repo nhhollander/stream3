@@ -24,7 +24,6 @@ class User:
             print("Received invalid message, dropping")
             self.send_system_message("You sent an invalid message (schema validation failure)", False)
             return
-        print(json.dumps(message, indent=2))
 
         if(message['type'] == "auth"):
             self.auth(message)
@@ -72,6 +71,7 @@ class User:
             })
             self.send_system_message(f"Welcome <b>{data['name']}</b>!", True)
             self.core.send_system_message_to_all(f"<b>{data['name']}</b> has connected!", True)
+            self.core.media.sync_client(self)
 
     def send_system_message(self, message, allowhtml, duration=-1):
         if duration < 0:

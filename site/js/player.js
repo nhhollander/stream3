@@ -20,6 +20,9 @@ class VideoPlayer {
                 this.video.src = data["source"];
                 this.frame.setAttribute("active","true");
                 break;
+            case "settime":
+                this.video.currentTime = data["seconds"];
+                break;
             case "play":
                 this.video.play();
                 this.frame.setAttribute("active","true");
