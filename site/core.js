@@ -3,6 +3,7 @@
 
 import { Auth } from "./js/auth.js"
 import { Messages } from "./js/messages.js"
+import { VideoPlayer } from "./js/player.js"
 import { WebSocketManager } from "./js/websocket.js"
 
 function stream_init() {
@@ -30,6 +31,7 @@ class Core {
 
         this.auth = new Auth(this.config, this);
         this.messages = new Messages(this.config, this);
+        this.player = new VideoPlayer(this.config, this);
         this.websocket = new WebSocketManager(this.config, this);
 
     }

@@ -22,11 +22,28 @@ class User:
         # Validate the message
         if not self.core.validator.validate(message):
             print("Received invalid message, dropping")
+            self.send_system_message("You sent an invalid message (schema validation failure)", False)
             return
         print(json.dumps(message, indent=2))
 
         if(message['type'] == "auth"):
             self.auth(message)
+            return
+
+        if not self.authenticated:
+            print("User not authenticated")
+            self.send_system_message("You need to be authenticated to do that", False)
+            return
+
+        if not self.has_permission(f"message.{message['type']}"):
+            print(f"User [{self.name}] does not have permission to send message of type [{message['type']}]")
+            self.send_system_message("You do not have permission to do that", False)
+            return
+
+        if message["type"] == "media":
+            self.core.media.handle_message(self, message)
+
+        
 
     def onclosed(self):
         print(f"User [{self.name}] has disconnected")
@@ -73,4 +90,18 @@ class User:
             print("Sending invalid message, dropping")
             return
         self.socket.sendMessage(json.dumps(obj))
-        
+
+    def has_permission(self, permission):
+        permission_parts = permission.split(".")
+        for user_permission in self.authdata["permissions"]:
+            user_permission_parts = user_permission.split(".")
+            success = True
+            for i in range(0, min(len(permission_parts),len(user_permission_parts))):
+                if user_permission_parts[i] == "*":
+                    return True
+                if permission_parts[i] == user_permission_parts[i]:
+                    continue
+                success = False
+            if success:
+                return True
+        return False

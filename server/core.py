@@ -5,6 +5,7 @@ import ssl
 from wrapper import WebSocketWrapper
 from auth import Auth
 from validator import MessageValidator
+from media import Media
 
 ##
 # Core of the server.
@@ -25,6 +26,7 @@ class Core:
         self.server.cool_core = self
 
         self.auth = Auth(self.config, self)
+        self.media = Media(self.config, self)
         self.validator = MessageValidator(self.config, self)
 
     def run(self):

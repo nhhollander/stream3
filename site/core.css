@@ -4,7 +4,9 @@
 @import "css/background.css";
 @import "css/input.css";
 @import "css/messages.css";
+@import "css/player.css";
 @import "css/websocket.css";
+
 html {
     font-family: Arial, Helvetica, sans-serif;
 }

@@ -1,0 +1,82 @@
+{
+    "anyOf": [
+        {
+            "required": ["type","command","source"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "media"
+                },
+                "command": {
+                    "type": "string",
+                    "const": "setsource"
+                },
+                "source": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "additionalProperties": false
+        },
+        {
+            "required": ["type","command","seconds"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "media"
+                },
+                "command": {
+                    "type": "string",
+                    "const": "settime"
+                },
+                "seconds": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            },
+            "additionalProperties": false
+        },
+        {
+            "required": ["type","command"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "media"
+                },
+                "command": {
+                    "type": "string",
+                    "const": "play"
+                }
+            },
+            "additionalProperties": false
+        },
+        {
+            "required": ["type","command"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "media"
+                },
+                "command": {
+                    "type": "string",
+                    "const": "pause"
+                }
+            },
+            "additionalProperties": false
+        },
+        {
+            "required": ["type","command"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "media"
+                },
+                "command": {
+                    "type": "string",
+                    "const": "stop"
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

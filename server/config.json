@@ -19,5 +19,6 @@
     },
     "client": {
         "default_message_duration": 5000
-    }
+    },
+    "media": {}
 }

@@ -27,7 +27,7 @@
         },
         "duration": {
             "type": "integer",
-            "min": 200
+            "minimum": 200
         }
     },
     "additionalProperties": false
