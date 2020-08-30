@@ -70,6 +70,7 @@ class Auth {
 
     ws_close() {
         this.elem_submit.disabled = true;
+        this.authenticated = false;
     }
 
     callback(data) {
@@ -78,6 +79,7 @@ class Auth {
             this.elem_hello.className = "hello";
             this.elem_hellonick.innerText = this.elem_nickname.value;
             this.authenticated = true;
+            this.autosubmit = true;
             setTimeout(function() {
                 this.authwindow.style.display = "none"
             }.bind(this), 500);
@@ -87,6 +89,7 @@ class Auth {
             this.elem_error.innerText = data["message"];
             this.elem_submit.disabled = false;
             this.elem_hello.className = "hello hidden";
+            this.autosubmit = false;
         }
     }
 

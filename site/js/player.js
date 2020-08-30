@@ -22,6 +22,8 @@ class VideoPlayer {
         document.getElementById("cb_admin_pause").addEventListener("click", this.pause.bind(this));
         document.getElementById("cb_admin_sync").addEventListener("click", this.cb_sync_to_me.bind(this));
         // User panel
+        document.getElementById("cb_user_play").addEventListener("click", this.play.bind(this));
+        document.getElementById("cb_user_pause").addEventListener("click", this.pause.bind(this));
 
         document.body.addEventListener("keydown", this.keydown.bind(this))
 
@@ -33,11 +35,11 @@ class VideoPlayer {
     handle_message(data) {
         switch(data["command"]) {
             case "setsource":
+                if(this.video.src == data["source"]) { return; }
                 this.video.src = data["source"];
                 this.frame.setAttribute("active","true");
                 break;
             case "settime":
-                console.log("Fun time!");
                 this.video.currentTime = data["seconds"];
                 break;
             case "play":
@@ -98,6 +100,13 @@ class VideoPlayer {
         this.core.websocket.send_object({
             "type": "media",
             "command": "pause"
+        });
+    }
+
+    stop() {
+        this.core.websocket.send_object({
+            "type": "media",
+            "command": "stop"
         });
     }
 
