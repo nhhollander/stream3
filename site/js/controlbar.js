@@ -21,9 +21,20 @@ class ControlBar {
 
         this.core.player.video.addEventListener("play", this.video_play_handler.bind(this));
         this.core.player.video.addEventListener("pause", this.video_pause_handler.bind(this));
+
+        document.body.addEventListener("mousemove", this.mouse_move_handler.bind(this));
     }
 
     // Handlers //
+
+    mouse_move_handler() {
+        this.controlbar.setAttribute("_hidden", "false");
+        clearTimeout(this.hide_timeout);
+        this.hide_timeout = setTimeout(function() {
+            this.controlbar.setAttribute("_hidden", "true");
+        }.bind(this), this.config["controls"]["timeout"]);
+        console.log(this.config["controls"]["timeout"]);
+    }
 
     video_play_handler() {
         this.button_play.style.display = "none";

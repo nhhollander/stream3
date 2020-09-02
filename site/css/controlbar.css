@@ -8,7 +8,7 @@ div.controlbar {
     opacity: 1;
     transition: opacity .25s;
 }
-div.controlbar.hidden {
+div.controlbar[_hidden="true"] {
     opacity: 0;
 }
 

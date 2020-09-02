@@ -13,6 +13,9 @@ function stream_init() {
         "websocket": {
             "address": "wss://raspberrypi.internal.crumbcake.cc:4433",
             "show_warning_timeout": 4000
+        },
+        "controls": {
+            "timeout": 3000
         }
     }
     window.core = new Core(config); // Save to global for debugging
