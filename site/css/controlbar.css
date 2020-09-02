@@ -14,12 +14,7 @@ div.controlbar[_hidden="true"] {
 
 @font-face {
     font-family: 'fontello';
-    src: url('../font/fontello.eot?73883749');
-    src: url('../font/fontello.eot?73883749#iefix') format('embedded-opentype'),
-         url('../font/fontello.woff2?73883749') format('woff2'),
-         url('../font/fontello.woff?73883749') format('woff'),
-         url('../font/fontello.ttf?73883749') format('truetype'),
-         url('../font/fontello.svg?73883749#fontello') format('svg');
+    src: url('../font/fontello.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }

@@ -23,6 +23,8 @@ class ControlBar {
         this.core.player.video.addEventListener("pause", this.video_pause_handler.bind(this));
 
         document.body.addEventListener("mousemove", this.mouse_move_handler.bind(this));
+        document.body.addEventListener("mousedown", this.mouse_move_handler.bind(this));
+        document.body.addEventListener("mouseup", this.mouse_move_handler.bind(this));
     }
 
     // Handlers //
@@ -34,7 +36,6 @@ class ControlBar {
         this.hide_timeout = setTimeout(function() {
             this.controlbar.setAttribute("_hidden", "true");
         }.bind(this), this.config["controls"]["timeout"]);
-        console.log(this.config["controls"]["timeout"]);
     }
 
     video_play_handler() {
