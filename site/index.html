@@ -23,27 +23,26 @@
 
         <!-- VIDEO PLAYER -->
         <div class="videoplayer" id="videoplayer">
-            <video src="" id="video">
-        </div>
-        <!-- VIDEO CONTROLS -->
-        <div class="controlbar" id="controlbar" admin="false">
-            <div class="nub" id="controlnub"></div>
-            <div class="body userpanel">
-                <button id="cb_user_play">Play</button>
-                <button id="cb_user_pause">Pause</button>
-            </div>
-            <div class="body adminpanel">
-                <button id="cb_admin_setmedia">Select Media</button>
-                <button id="cb_admin_play">Play</button>
-                <button id="cb_admin_pause">Pause</button>
-                <button id="cb_admin_stop">Stop</button>
-                <button id="cb_admin_sync">Sync</button>
-            </div>
+            <video id="video">
         </div>
 
         <!-- MESSAGES -->
         <div class="messagebar" id="messagebar">
             <div style="height: 100%"></div> <!-- Vertical space filler -->
+        </div>
+
+        <!-- VIDEO CONTROLS -->
+        <div class="controlbar" id="controlbar" admin="true">
+            <div class="scrub" id="scrub">
+                <div class="progress"></div>
+                <div class="buffer"></div>
+            </div>
+            <div class="content">
+                   <div class="button" id="cb_open" adminonly>&#xe802;</div><!--
+                --><div class="button" id="cb_stop" adminonly>&#xe804;</div><!--
+                --><div class="button" id="cb_play">&#xe800;</div><!--
+                --><div class="button" id="cb_pause" style="display: none">&#xe801;</div>
+            </div>
         </div>
 
         <!-- AUTH -->

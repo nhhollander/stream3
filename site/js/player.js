@@ -11,26 +11,16 @@ class VideoPlayer {
         this.frame = document.getElementById("videoplayer");
         this.video = document.getElementById("video");
 
-        this.controlbar = document.getElementById("controlbar");
-        this.controlnub = document.getElementById("controlnub");
-        this.controlnub.addEventListener("mouseenter", this.control_nub_hover.bind(this));
-        this.controlbar.addEventListener("mouseleave", this.control_bar_leave.bind(this));
-
-        // Admin panel
-        document.getElementById("cb_admin_setmedia").addEventListener("click", this.cb_select_media.bind(this));
-        document.getElementById("cb_admin_play").addEventListener("click", this.play.bind(this));
-        document.getElementById("cb_admin_pause").addEventListener("click", this.pause.bind(this));
-        document.getElementById("cb_admin_sync").addEventListener("click", this.cb_sync_to_me.bind(this));
-        // User panel
-        document.getElementById("cb_user_play").addEventListener("click", this.play.bind(this));
-        document.getElementById("cb_user_pause").addEventListener("click", this.pause.bind(this));
-
-        document.body.addEventListener("keydown", this.keydown.bind(this))
-
         this.core.register_handler("message_media", this.handle_message.bind(this));
+        this.video.addEventListener("error", this.handle_media_error.bind(this));
     }
 
     // Handlers //
+
+    handle_media_error(error) {
+        this.core.messages.show_message("CLIENT","client","Failed to load media!",false,6000);
+        console.log(error);
+    }
 
     handle_message(data) {
         switch(data["command"]) {
@@ -108,18 +98,6 @@ class VideoPlayer {
             "type": "media",
             "command": "stop"
         });
-    }
-
-    // Control bar methods //
-
-    control_nub_hover(e) {
-        if(this.core.auth.authenticated) {
-            this.controlbar.setAttribute("visible","true");
-        }
-    }
-
-    control_bar_leave(e) {
-        this.controlbar.setAttribute("visible","false");
     }
 
     cb_select_media() {

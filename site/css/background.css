@@ -13,7 +13,8 @@ div.bg>div.logobar {
     top: 0; left: 0;
     width: 100vw; height: 3cm;
     text-align: center;
-    background: linear-gradient(to bottom, rgba(0,0,0,.7) 5%, rgba(0,0,0,0) 100%);
+    background-image: url('../img/topgradient.png');
+    background-size: 100% 100%;
 }
 div.bg>div.logobar>img {
     height: 2cm;

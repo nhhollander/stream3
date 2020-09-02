@@ -80,6 +80,7 @@ class Auth {
             this.elem_hellonick.innerText = this.elem_nickname.value;
             this.authenticated = true;
             this.autosubmit = true;
+            this.core.controlbar.setadmin(data["admin"]);
             setTimeout(function() {
                 this.authwindow.style.display = "none"
             }.bind(this), 500);

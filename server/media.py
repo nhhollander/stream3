@@ -37,24 +37,28 @@ class Media:
             print(f"User [{user.name}] set the playback time to [{hh}:{mm}:{ss}]")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> set time to <b>{hh}:{mm}:{ss}</b>",True)
         elif cmd == "play":
-            if not self.mediastate == "pause":
-                print(f"User [{user.name}] attempted to start playback, but media was not paused")
-                user.send_system_message("Unable to play: Media is not paused",False)
+            if self.mediastate == "stop":
+                print(f"User [{user.name}] attempted to pause playback, but there is no media")
+                user.send_system_message("Unable to play: Media is not playing",False)
                 return
+            if not self.mediastate == "pause":
+                print(f"Warning: User [{user.name}] attempted to start playback, but media was not paused")
             self.play()
             print(f"User [{user.name}] started playback")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> started playback",True)
         elif cmd == "pause":
-            if not self.mediastate == "play":
-                print(f"User [{user.name}] attempted to pause playback, but media was not playing")
+            if self.mediastate == "stop":
+                print(f"User [{user.name}] attempted to pause playback, but there is no media")
                 user.send_system_message("Unable to pause: Media is not playing",False)
                 return
+            if not self.mediastate == "play":
+                print(f"Warning: User [{user.name}] attempted to pause playback, but media was not playing")
             self.pause()
             print(f"User [{user.name}] paused playback")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> paused playback",True)
         elif cmd == "stop":
             if self.mediastate == "stop":
-                print(f"User [{user.name}] attempted to stop playback, but media was not playing")
+                print(f"Warning: User [{user.name}] attempted to stop playback, but media was not playing")
                 user.send_system_message("Unable to stop: Media is not playing",False)
                 return
             self.stop()

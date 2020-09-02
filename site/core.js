@@ -5,12 +5,13 @@ import { Auth } from "./js/auth.js"
 import { Messages } from "./js/messages.js"
 import { VideoPlayer } from "./js/player.js"
 import { WebSocketManager } from "./js/websocket.js"
+import { ControlBar } from "./js/controlbar.js"
 
 function stream_init() {
     let config = {
         "messages": {},
         "websocket": {
-            "address": "wss://waffle.internal.crumbcake.cc:4433",
+            "address": "wss://raspberrypi.internal.crumbcake.cc:4433",
             "show_warning_timeout": 4000
         }
     }
@@ -33,6 +34,7 @@ class Core {
         this.messages = new Messages(this.config, this);
         this.player = new VideoPlayer(this.config, this);
         this.websocket = new WebSocketManager(this.config, this);
+        this.controlbar = new ControlBar(this.config, this);
 
     }
 

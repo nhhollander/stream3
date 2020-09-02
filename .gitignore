@@ -1,3 +1,6 @@
 # Ignore the test media for now
 testmedia/
 test3.mp4
+
+# Ignore update script
+updatepi.sh
