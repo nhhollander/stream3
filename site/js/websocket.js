@@ -46,7 +46,6 @@ class WebSocketManager {
     }
 
     onmessage(event) {
-        console.log("A websocket message has been received");
         let data = JSON.parse(event.data);
         this.core.send_event(`message_${data['type']}`, data);
     }

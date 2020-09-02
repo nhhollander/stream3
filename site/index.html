@@ -23,7 +23,7 @@
 
         <!-- VIDEO PLAYER -->
         <div class="videoplayer" id="videoplayer">
-            <video id="video">
+            <video id="video" muted>
         </div>
 
         <!-- MESSAGES -->
@@ -34,14 +34,18 @@
         <!-- VIDEO CONTROLS -->
         <div class="controlbar" id="controlbar" admin="true" _hidden="true">
             <div class="scrub" id="scrub">
-                <div class="progress"></div>
-                <div class="buffer"></div>
+                <div class="progress" id="cb_prog"></div>
+                <div class="buffer" id="cb_buff"></div>
             </div>
             <div class="content">
                    <div class="button" id="cb_open" adminonly>&#xe802;</div><!--
                 --><div class="button" id="cb_stop" adminonly>&#xe804;</div><!--
+                --><div class="button" id="cb_reset" adminonly>&#xe806;</div><!--
                 --><div class="button" id="cb_play">&#xe800;</div><!--
-                --><div class="button" id="cb_pause" style="display: none">&#xe801;</div>
+                --><div class="button" id="cb_pause" style="display: none">&#xe801;</div><!--
+                --><div class="button" id="cb_mute" style="display: none">&#xe809;</div><!--
+                --><div class="button" id="cb_unmute">&#xe80a;</div>
+
             </div>
         </div>
 

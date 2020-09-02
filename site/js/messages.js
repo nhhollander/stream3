@@ -55,7 +55,6 @@ class Messages {
             //this.style.setProperty('--msgyeet', `${height*-1}px`);
         }.bind(message), 100);
         // Hide
-        console.log(`Showing message for [${duration}] ${Math.max(duration,200)}ms`);
         setTimeout(function() {
             this.className += " hidden";
             setTimeout(function() {

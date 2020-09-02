@@ -30,12 +30,12 @@ class Media:
                 user.send_system_message("Unable to set time: No Media")
                 return
             seconds = message['seconds']
-            ss = seconds % 60
+            ss = int(seconds % 60)
             mm = int(seconds / 60) % 60
             hh = int(seconds / 360)
             self.set_media_time(seconds)
-            print(f"User [{user.name}] set the playback time to [{hh}:{mm}:{ss}]")
-            self.core.send_system_message_to_all(f"<b>{user.name}</b> set time to <b>{hh}:{mm}:{ss}</b>",True)
+            print(f"User [{user.name}] set the playback time to [{hh:0>2d}:{mm:0>2d}:{ss:0>2d}]")
+            self.core.send_system_message_to_all(f"<b>{user.name}</b> set time to <b>{hh:0>2d}:{mm:0>2d}:{ss:0>2d}</b>",True)
         elif cmd == "play":
             if self.mediastate == "stop":
                 print(f"User [{user.name}] attempted to pause playback, but there is no media")

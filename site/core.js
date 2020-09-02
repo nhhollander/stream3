@@ -15,7 +15,8 @@ function stream_init() {
             "show_warning_timeout": 4000
         },
         "controls": {
-            "timeout": 3000
+            "timeout": 3000,
+            "update_interval": 500
         }
     }
     window.core = new Core(config); // Save to global for debugging
