@@ -28,6 +28,7 @@ class ControlBar {
     // Handlers //
 
     mouse_move_handler() {
+        if(!this.core.auth.authenticated) { return; }
         this.controlbar.setAttribute("_hidden", "false");
         clearTimeout(this.hide_timeout);
         this.hide_timeout = setTimeout(function() {
