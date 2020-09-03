@@ -2,8 +2,8 @@
     "wsserver": {
         "host": "",
         "port": 4433,
-        "certfile": "/internalcert/raspberrypi.internal.crumbcake.cc.pem",
-        "keyfile": "/internalcert/raspberrypi.internal.crumbcake.cc.key"
+        "certfile": "/etc/letsencrypt/live/video.crumbcake.cc/fullchain.pem",
+        "keyfile": "/etc/letsencrypt/live/video.crumbcake.cc/privkey.pem"
     },
     "auth": {
         "keys": {

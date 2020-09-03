@@ -11,7 +11,7 @@ function stream_init() {
     let config = {
         "messages": {},
         "websocket": {
-            "address": "wss://raspberrypi.internal.crumbcake.cc:4433",
+            "address": "wss://video.crumbcake.cc:4433",
             "show_warning_timeout": 4000
         },
         "controls": {
