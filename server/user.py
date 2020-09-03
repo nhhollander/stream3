@@ -12,6 +12,7 @@ class User:
         self.core = core
         self.socket = socket
         self.name = "<unauthenticated user>"
+        self.cname = "\033[39m<unauthenticated user>\033[0m"
 
         self.authenticated = False
 
@@ -35,7 +36,7 @@ class User:
             return
 
         if not self.has_permission(f"message.{message['type']}"):
-            print(f"User [{self.name}] does not have permission to send message of type [{message['type']}]")
+            print(f"User [{self.cname}] does not have permission to send message of type [{message['type']}]")
             self.send_system_message("You do not have permission to do that", False)
             return
 
@@ -45,7 +46,7 @@ class User:
         
 
     def onclosed(self):
-        print(f"User [{self.name}] has disconnected")
+        print(f"User [{self.cname}] has disconnected")
         self.core.users.remove(self)
         if self.authenticated:
             self.core.send_system_message_to_all(f"<b>{self.name}</b> has disconnected", True)
@@ -62,7 +63,8 @@ class User:
             })
         else:
             self.name = data['name']
-            print(f"User [{self.name}] has authenticated!")
+            self.cname = f"\033[{result['logcolor']}{data['name']}\033[0m"
+            print(f"User [{self.cname}] has authenticated!")
             self.authdata = result
             self.authenticated = True
             self.send_object({

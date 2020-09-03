@@ -14,7 +14,7 @@ class Media:
 
     def handle_message(self, user, message):
         if not user.has_permission(f"media.{message['command']}"):
-            print(f"User [{user.name}] does not have permission to use media command [{message['command']}]")
+            print(f"User [{user.cname}] does not have permission to use media command [{message['command']}]")
             user.send_system_message("You do not have permission to do that", False)
             return
 
@@ -22,11 +22,11 @@ class Media:
         if cmd == "setsource":
             self.mediasource = message['source']
             self.setsource(message['source'])
-            print(f"User [{user.name}] set the media source to [{message['source']}]")
+            print(f"User [{user.cname}] set the media source to [{message['source']}]")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> has changed the media source",True)
         elif cmd == "settime":
             if self.mediastate == "stop":
-                print(f"User [{user.name}] attempted to change time, but there is no media playing")
+                print(f"User [{user.cname}] attempted to change time, but there is no media playing")
                 user.send_system_message("Unable to set time: No Media")
                 return
             seconds = message['seconds']
@@ -34,35 +34,35 @@ class Media:
             mm = int(seconds / 60) % 60
             hh = int(seconds / 360)
             self.set_media_time(seconds)
-            print(f"User [{user.name}] set the playback time to [{hh:0>2d}:{mm:0>2d}:{ss:0>2d}]")
+            print(f"User [{user.cname}] set the playback time to [{hh:0>2d}:{mm:0>2d}:{ss:0>2d}]")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> set time to <b>{hh:0>2d}:{mm:0>2d}:{ss:0>2d}</b>",True)
         elif cmd == "play":
             if self.mediastate == "stop":
-                print(f"User [{user.name}] attempted to pause playback, but there is no media")
+                print(f"User [{user.cname}] attempted to pause playback, but there is no media")
                 user.send_system_message("Unable to play: Media is not playing",False)
                 return
             if not self.mediastate == "pause":
-                print(f"Warning: User [{user.name}] attempted to start playback, but media was not paused")
+                print(f"Warning: User [{user.cname}] attempted to start playback, but media was not paused")
             self.play()
-            print(f"User [{user.name}] started playback")
+            print(f"User [{user.cname}] started playback")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> started playback",True)
         elif cmd == "pause":
             if self.mediastate == "stop":
-                print(f"User [{user.name}] attempted to pause playback, but there is no media")
+                print(f"User [{user.cname}] attempted to pause playback, but there is no media")
                 user.send_system_message("Unable to pause: Media is not playing",False)
                 return
             if not self.mediastate == "play":
-                print(f"Warning: User [{user.name}] attempted to pause playback, but media was not playing")
+                print(f"Warning: User [{user.cname}] attempted to pause playback, but media was not playing")
             self.pause()
-            print(f"User [{user.name}] paused playback")
+            print(f"User [{user.cname}] paused playback")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> paused playback",True)
         elif cmd == "stop":
             if self.mediastate == "stop":
-                print(f"Warning: User [{user.name}] attempted to stop playback, but media was not playing")
+                print(f"Warning: User [{user.cname}] attempted to stop playback, but media was not playing")
                 user.send_system_message("Unable to stop: Media is not playing",False)
                 return
             self.stop()
-            print(f"User [{user.name}] stopped playback")
+            print(f"User [{user.cname}] stopped playback")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> stopped playback",True)
         
     def sync_client(self, user):

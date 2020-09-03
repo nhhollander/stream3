@@ -14,12 +14,14 @@
                     "media.play",
                     "media.pause"
                 ],
-                "admin": false
+                "admin": false,
+                "logcolor": "32m"
             },
             "adminkey": {
                 "namepattern": "crumbcake",
                 "permissions": ["*"],
-                "admin": true
+                "admin": true,
+                "logcolor": "31m"
             }
         }
     },
