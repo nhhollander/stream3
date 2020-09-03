@@ -30,6 +30,10 @@ class User:
             self.auth(message)
             return
 
+        if(message['type'] == "ping"):
+            self.send_object(message)
+            return
+
         if not self.authenticated:
             print("User not authenticated")
             self.send_system_message("You need to be authenticated to do that", False)

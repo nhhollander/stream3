@@ -15,6 +15,16 @@ class WebSocketManager {
         this.connected = false;
 
         this.connect();
+
+        setInterval(this.ping.bind(this), 1000);
+    }
+
+    ping() {
+        if(this.connected) {
+            this.send_object({
+                "type": "ping"
+            })
+        }
     }
 
     connect() {

@@ -7,7 +7,8 @@
         {"$ref": "components/auth.json"},
         {"$ref": "components/authresult.json"},
         {"$ref": "components/message.json"},
-        {"$ref": "components/media.json"}
+        {"$ref": "components/media.json"},
+        {"$ref": "components/ping.json"}
     ],
     "additionalProperties": true
 }
