@@ -13,8 +13,8 @@ div.controlbar[_hidden="true"] {
 }
 
 @font-face {
-    font-family: 'fontello';
-    src: url('../font/fontello.woff2') format('woff2');
+    font-family: 'icons';
+    src: url('../font/crumbflix.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
@@ -52,7 +52,7 @@ div.controlbar>div.content>div.button {
     text-align: center;
     cursor: pointer;
     color: rgba(255,255,255,.8);
-    font-family: fontello;
+    font-family: 'icons';
     display: inline-block;
     user-select: none;
 }
