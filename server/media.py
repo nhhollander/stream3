@@ -27,7 +27,7 @@ class Media:
         elif cmd == "settime":
             if self.mediastate == "stop":
                 print(f"User [{user.cname}] attempted to change time, but there is no media playing")
-                user.send_system_message("Unable to set time: No Media")
+                user.send_system_message("Unable to set time: No Media",False)
                 return
             seconds = message['seconds']
             ss = int(seconds % 60)
