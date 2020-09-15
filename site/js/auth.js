@@ -45,6 +45,38 @@ class Auth {
         }
     }
 
+    get_browser_identity() {
+        if(navigator.userAgent.includes("Opera")) {
+            return "opera";
+        } else if(navigator.userAgent.includes("Chrome")) {
+            return "chrome";
+        } else if(navigator.userAgent.includes("Safari")) {
+            return "safari";
+        } else if(navigator.userAgent.includes("Firefox")) {
+            return "firefox";
+        } else if(navigator.userAgent.includes("MSIE")) {
+            return "ie";
+        } else {
+            return "unknown";
+        }
+    }
+
+    get_platform_identity() {
+        if(navigator.platform.toLowerCase().includes("linux")) {
+            return "linux";
+        } else if(navigator.platform.toLowerCase().includes("win")) {
+            return "windows";
+        } else if(navigator.platform.toLowerCase().includes("mac")) {
+            return "apple";
+        } else if(navigator.platform.toLowerCase().includes("android")) {
+            return "android";
+        } else if(navigator.platform.toLowerCase().includes("iphone")) {
+            return "apple";
+        } else {
+            return "unknown";
+        }
+    }
+
     submit() {
         if(!this.core.websocket.connected) {
             console.error("Attempted to authenticate while disconnected");
@@ -57,7 +89,11 @@ class Auth {
         this.core.websocket.send_object({
             "type": "auth",
             "name": nickname,
-            "key": key
+            "key": key,
+            "clientinfo": {
+                "browser": this.get_browser_identity(),
+                "platform": this.get_platform_identity()
+            }
         });
     }
 

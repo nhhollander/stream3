@@ -8,13 +8,19 @@
         "clients": {
             "type": "object",
             "items": {
-                "required": ["mediatime","bufferhealth"],
+                "required": ["mediatime","bufferhealth","browser","platform"],
                 "mediatime": {
                     "type": "number",
                     "minimum": 0
                 },
                 "bufferhealth": {
                     "type": "number"
+                },
+                "browser": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "string"
                 }
             }
         }

@@ -32,6 +32,26 @@ class ClientStatus {
         return `${hh}:${mm}:${ss}.${ms}`;
     }
 
+    get_platform_string(platform) {
+        let res = "";
+        switch(platform["browser"]) {
+            case "opera": res += "&#xe011;"; break;
+            case "chrome": res += "&#xe012;"; break;
+            case "safari": res += "&#xe013;"; break;
+            case "firefox": res += "&#xe010;"; break;
+            case "ie": res += "&#xe014;"; break;
+            default: res += "&#xe015;"; break;
+        }
+        switch(platform["platform"]) {
+            case "linux": res += "&#xe00c;"; break;
+            case "windows": res += "&#xe00d;"; break;
+            case "apple": res += "&#xe00e;"; break;
+            case "android": res += "&#xe00f;"; break;
+            default: res += "&#xe015;"; break;
+        }
+        return res;
+    }
+
     handle_message(message) {
         let oldrows = this.table.querySelectorAll("tr:not([isheader])");
         for(let i = 0; i < oldrows.length; i++) {
@@ -43,11 +63,14 @@ class ClientStatus {
             let row = document.createElement("tr");
             let usercell = document.createElement("td");
             usercell.innerText = username;
+            let platform = document.createElement("td");
+            platform.innerHTML = this.get_platform_string(user);
             let currenttime = document.createElement("td");
             currenttime.innerText = this.convert_time(user["mediatime"]);
             let bufferhealth = document.createElement("td");
             bufferhealth.innerText = this.convert_time(user["bufferhealth"]);
             row.appendChild(usercell);
+            row.appendChild(platform);
             row.appendChild(currenttime);
             row.appendChild(bufferhealth);
             this.table.appendChild(row);

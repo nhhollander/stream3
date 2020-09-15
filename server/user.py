@@ -21,6 +21,10 @@ class User:
             "bufferhealth": 0,
             "timestamp": 0
         }
+        self.clientinfo = {
+            "browser": "unknown",
+            "platform": "unknown"
+        }
 
         core.users.append(self)
 
@@ -91,8 +95,9 @@ class User:
             return
         self.name = data['name']
         self.cname = f"\033[{result['logcolor']}{data['name']}\033[0m"
-        print(f"User [{self.cname}] has authenticated!")
+        print(f"User [{self.cname}] has authenticated! {data['clientinfo']}")
         self.authdata = result
+        self.clientinfo = data['clientinfo']
         self.authenticated = True
         self.send_object({
             "type": "authresult",
@@ -161,7 +166,9 @@ class User:
             delta = 0
         return {
             "mediatime": self.clientstatus["mediatime"] + delta,
-            "bufferhealth": self.clientstatus["bufferhealth"] - delta
+            "bufferhealth": self.clientstatus["bufferhealth"] - delta,
+            "browser": self.clientinfo["browser"],
+            "platform": self.clientinfo["platform"]
         }
 
     def handle_getallclientstatus(self):
