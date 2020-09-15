@@ -6,6 +6,7 @@ import { Messages } from "./js/messages.js"
 import { VideoPlayer } from "./js/player.js"
 import { WebSocketManager } from "./js/websocket.js"
 import { ControlBar } from "./js/controlbar.js"
+import { ClientStatus } from "./js/clientstatus.js"
 
 function stream_init() {
     let config = {
@@ -16,7 +17,13 @@ function stream_init() {
         },
         "controls": {
             "timeout": 3000,
-            "update_interval": 500
+            "update_interval": 1000
+        },
+        "player": {
+            "status_update_interval": 2000
+        },
+        "clientstatus": {
+            "interval": 250
         }
     }
     window.core = new Core(config); // Save to global for debugging
@@ -39,6 +46,7 @@ class Core {
         this.player = new VideoPlayer(this.config, this);
         this.websocket = new WebSocketManager(this.config, this);
         this.controlbar = new ControlBar(this.config, this);
+        this.clientstatus = new ClientStatus(this.config, this);
 
     }
 

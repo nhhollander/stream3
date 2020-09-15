@@ -1,0 +1,17 @@
+{
+    "required": ["type","mediatime","bufferhealth"],
+    "properties": {
+        "type": {
+            "type": "string",
+            "const": "clientstatus"
+        },
+        "mediatime": {
+            "type": "number",
+            "minimum": 0
+        },
+        "bufferhealth": {
+            "type": "number"
+        }
+    },
+    "additionalProperties": false
+}

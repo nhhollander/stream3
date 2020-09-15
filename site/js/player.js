@@ -13,6 +13,25 @@ class VideoPlayer {
 
         this.core.register_handler("message_media", this.handle_message.bind(this));
         this.video.addEventListener("error", this.handle_media_error.bind(this));
+
+        setInterval(this.send_clientstatus.bind(this), this.config["player"]["status_update_interval"]);
+    }
+
+    send_clientstatus() {
+        if(!this.core.auth.authenticated) { return; }
+        if(this.frame.getAttribute("active") == "false") { return; }
+        let mediatime = this.video.currentTime;
+        let bufferhealth = 0;
+        let buffers = this.video.buffered;
+        if(buffers.length > 0) {
+            let maxbuffertime = buffers.end(buffers.length-1);
+            bufferhealth = maxbuffertime - mediatime;
+        }
+        this.core.websocket.send_object({
+            "type": "clientstatus",
+            "mediatime": mediatime,
+            "bufferhealth": bufferhealth
+        });
     }
 
     // Handlers //
@@ -42,7 +61,7 @@ class VideoPlayer {
                 this.video.pause();
                 break;
             case "stop":
-                this.video.src = "";
+                //this.video.src = "";
                 this.frame.setAttribute("active","false");
             default:
                 this.core.messages.show_message("CLIENT","client","Server sent bad media command",false,3000);

@@ -38,7 +38,7 @@ class Media:
             self.core.send_system_message_to_all(f"<b>{user.name}</b> set time to <b>{hh:0>2d}:{mm:0>2d}:{ss:0>2d}</b>",True)
         elif cmd == "play":
             if self.mediastate == "stop":
-                print(f"User [{user.cname}] attempted to pause playback, but there is no media")
+                print(f"User [{user.cname}] attempted to play playback, but there is no media")
                 user.send_system_message("Unable to play: Media is not playing",False)
                 return
             if not self.mediastate == "pause":
@@ -128,6 +128,8 @@ class Media:
             "type": "media",
             "command": "play"
         })
+        for user in self.core.get_authenticated_users():
+            user.clientstatus_zerodelta(False)
 
     def pause(self):
         self.update_media_time()
@@ -136,6 +138,8 @@ class Media:
             "type": "media",
             "command": "pause"
         })
+        for user in self.core.get_authenticated_users():
+            user.clientstatus_zerodelta(True)
 
     def stop(self):
         self.mediastate = "stop"

@@ -1,0 +1,10 @@
+{
+    "required": ["type"],
+    "properties": {
+        "type": {
+            "type": "string",
+            "const": "getallclientstatus"
+        }
+    },
+    "additionalProperties": false
+}

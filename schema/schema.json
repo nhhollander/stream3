@@ -4,10 +4,13 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "anyOf": [
+        {"$ref": "components/allclientstatus.json"},
         {"$ref": "components/auth.json"},
         {"$ref": "components/authresult.json"},
-        {"$ref": "components/message.json"},
+        {"$ref": "components/clientstatus.json"},
+        {"$ref": "components/getallclientstatus.json"},
         {"$ref": "components/media.json"},
+        {"$ref": "components/message.json"},
         {"$ref": "components/ping.json"}
     ],
     "additionalProperties": true

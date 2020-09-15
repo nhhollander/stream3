@@ -1,0 +1,23 @@
+{
+    "required": ["type","clients"],
+    "properties": {
+        "type": {
+            "type": "string",
+            "const": "allclientstatus"
+        },
+        "clients": {
+            "type": "object",
+            "items": {
+                "required": ["mediatime","bufferhealth"],
+                "mediatime": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "bufferhealth": {
+                    "type": "number"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

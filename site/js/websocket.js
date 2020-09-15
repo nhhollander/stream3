@@ -16,8 +16,8 @@ class WebSocketManager {
 
         this.connect();
 
-        setInterval(this.ping.bind(this), 1000);
-        this.core.register_handler("message_pong", function(){});
+        setInterval(this.ping.bind(this), 2000);
+        this.core.register_handler("message_ping", function(){});
     }
 
     ping() {

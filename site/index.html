@@ -32,13 +32,14 @@
         </div>
 
         <!-- VIDEO CONTROLS -->
-        <div class="controlbar" id="controlbar" admin="true" _hidden="true">
+        <div class="controlbar" id="controlbar" admin="false" _hidden="true">
             <div class="scrub" id="scrub">
                 <div class="progress" id="cb_prog"></div>
                 <div class="buffer" id="cb_buff"></div>
             </div>
             <div class="content">
                    <div class="button" id="cb_open" adminonly>&#xe003;</div><!--
+                --><div class="button" id="cb_users" adminonly>&#xe00B;</div><!--
                 --><div class="button" id="cb_stop" adminonly>&#xe002;</div><!--
                 --><div class="button" id="cb_reset" adminonly>&#xe006;</div><!--
                 --><div class="button" id="cb_play">&#xe000;</div><!--
@@ -47,6 +48,22 @@
                 --><div class="button" id="cb_unmute">&#xe009;</div>
 
             </div>
+        </div>
+
+        <!-- USER INFO PANEL -->
+        <div class="userinfo" id="userinfo" style="display: none">
+            <table id="userinfotable">
+                <tbody>
+                    <tr isheader>
+                        <th>User</th>
+                        <th>Time</th>
+                        <th>Buffer</th>
+                    </tr>
+                    <tr>
+                        <td colspan=3 style="text-align: center"><i>Loading...</i></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- AUTH -->

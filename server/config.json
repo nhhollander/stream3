@@ -11,6 +11,7 @@
                 "namepattern": ".*",
                 "permissions": [
                     "message.media",
+                    "message.clientstatus",
                     "media.play",
                     "media.pause"
                 ],

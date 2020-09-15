@@ -10,6 +10,7 @@ class ControlBar {
         this.controlbar = document.getElementById("controlbar");
 
         this.button_open = document.getElementById("cb_open");
+        this.button_users = document.getElementById("cb_users");
         this.button_stop = document.getElementById("cb_stop");
         this.button_reset = document.getElementById("cb_reset");
         this.button_play = document.getElementById("cb_play");
@@ -21,6 +22,7 @@ class ControlBar {
         this.scrub_buff = document.getElementById("cb_buff");
 
         this.button_open.addEventListener("click", this.button_open_clicked.bind(this));
+        this.button_users.addEventListener("click", this.button_users_clicked.bind(this));
         this.button_stop.addEventListener("click", this.button_stop_clicked.bind(this));
         this.button_reset.addEventListener("click", this.button_reset_clicked.bind(this));
         this.button_play.addEventListener("click", this.button_play_clicked.bind(this));
@@ -106,6 +108,10 @@ class ControlBar {
 
     button_stop_clicked() {
         this.core.player.stop();
+    }
+
+    button_users_clicked() {
+        this.core.clientstatus.toggle_button_clicked();
     }
 
     button_reset_clicked() {
