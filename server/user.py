@@ -95,7 +95,7 @@ class User:
             return
         self.name = data['name']
         self.cname = f"\033[{result['logcolor']}{data['name']}\033[0m"
-        print(f"User [{self.cname}] has authenticated! {data['clientinfo']}")
+        print(f"User [{self.cname}] has authenticated!")
         self.authdata = result
         self.clientinfo = data['clientinfo']
         self.authenticated = True
