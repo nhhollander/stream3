@@ -21,7 +21,7 @@ class ClientStatus {
      */
     convert_time(time) {
         time = Math.max(time, 0);
-        let hh = Math.floor(time / 360);
+        let hh = Math.floor(time / 3600);
         let mm = Math.floor(time / 60) % 60;
         let ss = Math.floor(time % 60);
         let ms = Math.floor((time % 1) * 100);

@@ -1,4 +1,5 @@
 import time
+import glob
 
 ##
 # Media Management Class.
@@ -64,6 +65,8 @@ class Media:
             self.stop()
             print(f"User [{user.cname}] stopped playback")
             self.core.send_system_message_to_all(f"<b>{user.name}</b> stopped playback",True)
+        else:
+            print(f"User [{user.cname}] sent unknown command [{cmd}]")
         
     def sync_client(self, user):
         if self.mediastate == "stop": return
@@ -147,3 +150,10 @@ class Media:
             "type": "media",
             "command": "stop"
         })
+
+    def get_media(self):
+        media_names = glob.glob(self.config["library_path"])
+        media = []
+        for fname in media_names:
+            media.append(self.config["url_base"] + fname)
+        return media

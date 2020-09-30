@@ -10,6 +10,7 @@
         {"$ref": "components/clientstatus.json"},
         {"$ref": "components/getallclientstatus.json"},
         {"$ref": "components/media.json"},
+        {"$ref": "components/medialist.json"},
         {"$ref": "components/message.json"},
         {"$ref": "components/ping.json"}
     ],

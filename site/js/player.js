@@ -24,8 +24,13 @@ class VideoPlayer {
         let bufferhealth = 0;
         let buffers = this.video.buffered;
         if(buffers.length > 0) {
-            let maxbuffertime = buffers.end(buffers.length-1);
-            bufferhealth = maxbuffertime - mediatime;
+            for(let i = 0; i < buffers.length; i++) {
+                let btime = buffers.end(i);
+                let bhealth = btime - mediatime;
+                if(bhealth > bufferhealth) {
+                    bufferhealth = bhealth;
+                }
+            }
         }
         this.core.websocket.send_object({
             "type": "clientstatus",
@@ -53,7 +58,9 @@ class VideoPlayer {
                 break;
             case "play":
                 this.video.play().catch(function() {
-                    this.core.messages.show_message("CLIENT","client","Media playback failed!  Check your autoplay settings!",false,3000);
+                    if(this.video.src != "") {
+                        this.core.messages.show_message("CLIENT","client","Media playback failed!  Check your autoplay settings!",false,3000);
+                    }
                 }.bind(this));
                 this.frame.setAttribute("active","true");
                 break;

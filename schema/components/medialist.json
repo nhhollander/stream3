@@ -1,0 +1,27 @@
+{
+    "anyOf": [
+        {
+            "required": ["type"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "getmedia"
+                }
+            },
+            "additionalProperties": false
+        },
+        {
+            "required": ["type","media"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "medialist"
+                },
+                "media": {
+                    "type": "array"
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

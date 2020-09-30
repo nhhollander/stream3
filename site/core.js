@@ -7,6 +7,7 @@ import { VideoPlayer } from "./js/player.js"
 import { WebSocketManager } from "./js/websocket.js"
 import { ControlBar } from "./js/controlbar.js"
 import { ClientStatus } from "./js/clientstatus.js"
+import { MediaSelector } from "./js/openmedia.js"
 
 function stream_init() {
     let config = {
@@ -47,6 +48,7 @@ class Core {
         this.websocket = new WebSocketManager(this.config, this);
         this.controlbar = new ControlBar(this.config, this);
         this.clientstatus = new ClientStatus(this.config, this);
+        this.openmedia = new MediaSelector(this.config, this);
 
     }
 
@@ -60,6 +62,7 @@ class Core {
     send_event(event, data=null) {
         if(!(event in this.handlers)) {
             console.error(`Warning: Event [${event}] not handled!`);
+            console.log(data);
             return;
         }
         for(const handler of this.handlers[event]) {

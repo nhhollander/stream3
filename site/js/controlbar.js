@@ -90,20 +90,9 @@ class ControlBar {
     }
 
     button_open_clicked() {
-        let media = prompt("Enter URI:");
-        // I stole this regular expression from some website lol
-        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-        if(!pattern.test(media)) {
-            this.core.messages.show_message("CLIENT","client","Invalid URI",false,3000);
-            return;
-        }
-        
-        this.core.player.setsource(media);
+        this.core.websocket.send_object({
+            "type": "getmedia"
+        });
     }
 
     button_stop_clicked() {

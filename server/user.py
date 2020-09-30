@@ -1,6 +1,7 @@
 
 import json
 import time
+import glob
 
 ##
 # User class.
@@ -64,6 +65,12 @@ class User:
 
         if message["type"] == "getallclientstatus":
             self.handle_getallclientstatus()
+
+        if message["type"] == "getmedia":
+            self.send_object({
+                "type": "medialist",
+                "media": self.core.media.get_media()
+            })
 
         
 

@@ -1,0 +1,21 @@
+div.openmedia {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%,-50%);
+    display: inline-block;
+    padding: 3mm;
+    background-color: rgba(0,0,0,.8);
+    color: white;
+    border-radius: 2mm;
+}
+
+div.openmedia>div.media {
+    margin: .5mm;
+    padding: 1mm 3mm;
+    border-radius: 1mm;
+    cursor: pointer;
+}
+div.openmedia>div.media:hover {
+    background-color: rgba(255,255,255,.1);
+}
