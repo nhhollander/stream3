@@ -4,3 +4,6 @@ test3.mp4
 
 # Ignore update script
 updatepi.sh
+
+# Ignore generated media
+out

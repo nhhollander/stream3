@@ -50,7 +50,30 @@ class VideoPlayer {
         switch(data["command"]) {
             case "setsource":
                 if(this.video.src == data["source"]) { return; }
-                this.video.src = data["source"];
+                // Unbind HLS if necessary
+                if(this.hls != undefined) {
+                    this.hls.detachMedia();
+                    this.hls = undefined;
+                }
+                // Determine media source type
+                if(data["source"].endsWith("m3u8")) {
+                    console.log("Source is HLS");
+                    if(this.hls.isSupported()) {
+                        console.log("Using hls.js for HLS support");
+                        this.hls = new this.hls();
+                        this.hls.loadSource(data["source"]);
+                        this.hls.attachMedia(this.video);
+                    } else if(this.video.canPlayType("application/vnd.apple.mpegurl")) {
+                        console.log("Using native HLS support");
+                        this.video.src = data["source"];
+                    } else {
+                        console.log("HLS not supported!");
+                        this.core.messages.show_message("CLIENT","client","<b>ERROR:</b> HLS is not supported in this browser!",true,6000);
+                    }
+                } else {
+                    console.log("Source is not HLS");
+                    this.video.src = data["source"];
+                }
                 this.frame.setAttribute("active","true");
                 break;
             case "settime":
