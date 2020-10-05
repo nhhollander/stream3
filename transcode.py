@@ -20,9 +20,9 @@ import json
 # Output bitrate is clamped to input bitrate.
 output_resolutions = [
     #RES   VRATE
-    [144,  1000],
-    [240,  1000],
-    [360,  2000],
+    #[144,  1000],
+    #[240,  1000],
+    #[360,  2000],
     [480,  3000],
     [720,  6000],
     [1080, 10000],
@@ -85,6 +85,7 @@ for i, track in enumerate(input_media_info.tracks):
     print(f"  \033[32m{i+1}\033[0m: {track.track_type}")
     if track.track_type == "Video":
         bitrate = track.bit_rate or track.nominal_bit_rate or -1000
+        fps = float(track.frame_rate) if track.frame_rate else 24.0
         print(f"    Resolution: \033[33m{track.width}x{track.height}\033[0m")
         print(f"    Bitrate: \033[33m{int(bitrate/1000)}kbps\033[0m")
         print(f"    Framerate: \033[33m{track.frame_rate}\033[0m")
@@ -95,7 +96,7 @@ for i, track in enumerate(input_media_info.tracks):
             "width": track.width,
             "height": track.height,
             "bitrate": track.bit_rate or track.nominal_bit_rate,
-            "fps": float(track.frame_rate),
+            "fps": fps,
             "id": track.track_id - 1
         })
     elif track.track_type == "Audio":
@@ -302,19 +303,16 @@ for _resolution, _bitrate in output_resolutions:
     if _resolution - 100 > video_track["height"]: continue
     bitrate = min(_bitrate, video_track["bitrate"] / 1000)
     resy = min(_resolution, video_track["height"])
-    resx = int(video_track["width"] * (resy / video_track["height"]))
     if resx % 2 != 0:
         resx -= 1
     if resy % 2 != 0:
         resy -= 1
     # If resolution is unchanged, copy instead of transcoding
-    copy = resx == video_track["width"] and resy == video_track["height"]
     output_params.append({
         "resname": f"{resy}p",
         "resx": resx,
         "resy": resy,
-        "bitrate": bitrate,
-        "copy": copy
+        "bitrate": bitrate
     })
     print(f"\033[33m{resy}p\033[0m @ \033[33m{bitrate}k\033[0m")
 
@@ -328,11 +326,13 @@ ffmpeg_params = {
     "inputenc": [],
     "mapping": [],
     "streams": [],
-    "output": []
+    "output": [],
+    "filters": []
 }
 
 ffmpeg_params["inputenc"].append((None,"-hide_banner -loglevel warning -stats"))
 ffmpeg_params["inputenc"].append(("i", input_file_name))
+ffmpeg_params["inputenc"].append(("i", "testmedia/sound.mkv")) # REMOVE ME
 ffmpeg_params["inputenc"].append(("g", math.ceil(video_track['fps'] * encoding_options['keyframes_interval'])))
 ffmpeg_params["inputenc"].append(("sc_threshold", 0))
 ffmpeg_params["inputenc"].append(("c:a", "aac")) # aac required for mp4
@@ -348,16 +348,31 @@ ffmpeg_params["output"].append((None, f"site/media/{output_name}_%v/index.m3u8")
 # Generate mappings
 var_stream_map = ""
 for i, param in enumerate(output_params):
-    ffmpeg_params["mapping"].append(("map", f"0:{video_track['id']}"))
-    ffmpeg_params["mapping"].append(("map", f"0:{audio_track['id']}"))
-    if param['copy'] and False: # Disabled due to codec detection bug
-        ffmpeg_params["streams"].append((f"c:v:{i}","copy"))
-    else:
-        ffmpeg_params["streams"].append((f"s:v:{i}", f"{param['resx']}:{param['resy']}"))
-        ffmpeg_params["streams"].append((f"c:v:{i}", encoding_options['video_codec']))
-        ffmpeg_params["streams"].append((f"b:v:{i}", f"{param['bitrate']}k"))
+    # Generate the filter graph component
+    filters = []
+    #`filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Codec\\: {encoding_options['video_codec']}':fontcolor=black:fontsize=90:x=2245:y=1445")
+    #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Codec\\: {encoding_options['video_codec']}':fontcolor=#c0212f:fontsize=90:x=2240:y=1440")
+    #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Bitrate\\: {param['bitrate']}kbps':fontcolor=black:fontsize=90:x=2245:y=1545")
+    #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Bitrate\\: {param['bitrate']}kbps':fontcolor=#c0212f:fontsize=90:x=2240:y=1540")
+    #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Resolution\\: {param['resx']}x{param['resy']}':fontcolor=black:fontsize=90:x=2245:y=1645")
+    #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Resolution\\: {param['resx']}x{param['resy']}':fontcolor=#c0212f:fontsize=90:x=2240:y=1640")
+    #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Frame\\: %{{frame_num}}':fontcolor=black:fontsize=90:x=2245:y=1745")
+    #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Frame\\: %{{frame_num}}':fontcolor=#c0212f:fontsize=90:x=2240:y=1740")
+    filters.append(f"scale=-1:{param['resy']}")
+    filterstr = ",".join(filters)
+    filterstr = f"[0:{video_track['id']}]{filterstr}[vtrack{i}];[0:{audio_track['id']}]anull-[atrack{i}]"
+    #filterstr = f"[0:v]{filterstr}[vtrack{i}];[1:a]anull[atrack{i}]"
+    ffmpeg_params["filters"].append(filterstr)
+    ffmpeg_params["mapping"].append(("map", f"[vtrack{i}]"))
+    ffmpeg_params["mapping"].append(("map", f"[atrack{i}]"))
+    ffmpeg_params["streams"].append((f"c:v:{i}", encoding_options['video_codec']))
+    ffmpeg_params["streams"].append((f"b:v:{i}", f"{param['bitrate']}k"))
     var_stream_map += f"v:{i},a:{i} "
+filternet = ";".join(ffmpeg_params["filters"])
+print(filternet)
+ffmpeg_params["streams"].append(("filter_complex", f'"{filternet}"'))
 ffmpeg_params["streams"].append(("var_stream_map", f'"{var_stream_map[:-1]}"'))
+ffmpeg_params["streams"].append(("to", "01:00:00.00"))
 
 
 print("Generating command...")
@@ -371,7 +386,7 @@ for param in (ffmpeg_params["inputenc"] + ffmpeg_params["mapping"] + ffmpeg_para
 print("Transcoding...")
 #print("debug")
 print(f"\033[31m{command}\033[0m")
-#subprocess.run(command, shell=True)
+subprocess.run(command, shell=True)
 
 print("Generating media manifest file...")
 media_manifest = {}
