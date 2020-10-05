@@ -58,9 +58,9 @@ class VideoPlayer {
                 // Determine media source type
                 if(data["source"].endsWith("m3u8")) {
                     console.log("Source is HLS");
-                    if(this.hls.isSupported()) {
+                    if(Hls.isSupported()) {
                         console.log("Using hls.js for HLS support");
-                        this.hls = new this.hls();
+                        this.hls = new Hls();
                         this.hls.loadSource(data["source"]);
                         this.hls.attachMedia(this.video);
                     } else if(this.video.canPlayType("application/vnd.apple.mpegurl")) {

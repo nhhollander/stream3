@@ -1,3 +1,4 @@
 # Ignore media files which are quite large
 *.mp4
 *.mkv
+media/

@@ -152,7 +152,9 @@ class Media:
         })
 
     def get_media(self):
-        media_names = glob.glob(self.config["library_path"])
+        media_names = []
+        for path in self.config["library_paths"]:
+            media_names += glob.glob(path)
         media = []
         for fname in media_names:
             media.append(self.config["url_base"] + fname)

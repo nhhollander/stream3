@@ -23,6 +23,12 @@
                 "permissions": ["*"],
                 "admin": true,
                 "logcolor": "31m"
+            },
+            "secret_admin_key": {
+                "namepattern": ".*",
+                "permissions": ["*"],
+                "admin": true,
+                "logcolor": "31m"
             }
         }
     },
@@ -30,7 +36,10 @@
         "default_message_duration": 5000
     },
     "media": {
-        "library_path": "./media/*.mp4",
+        "library_paths": [
+            "./media/*.mp4",
+            "./media/*.m3u8"
+        ],
         "url_base": ""
     }
 }

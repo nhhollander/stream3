@@ -40,7 +40,9 @@ encoding_options = {
     # Seconds per HLS segment, should be a multiple of `keyframes_interval`
     "segment_size": 10,
     # Audio bitrate
-    "audio_bitrate": "350k"
+    "audio_bitrate": "350k",
+    # Codec
+    "video_codec": "libx264"
 }
 
 ##############################
@@ -339,8 +341,9 @@ ffmpeg_params["output"].append(("master_pl_name", f"{output_name}.m3u8")) # TODO
 ffmpeg_params["output"].append(("f", "hls"))
 ffmpeg_params["output"].append(("hls_time", encoding_options["segment_size"]))
 ffmpeg_params["output"].append(("hls_list_size", 0)) # 0 is unlimited
-ffmpeg_params["output"].append(("hls_segment_filename", f"out/{output_name}_%v/seq%d.ts"))
-ffmpeg_params["output"].append((None, f"out/{output_name}_%v/index.m3u8"))
+ffmpeg_params["output"].append(("hls_segment_filename", f"site/media/{output_name}_%v/seq%d.ts"))
+ffmpeg_params["output"].append(("hls_playlist_type", "vod"))
+ffmpeg_params["output"].append((None, f"site/media/{output_name}_%v/index.m3u8"))
 
 # Generate mappings
 var_stream_map = ""
@@ -351,7 +354,7 @@ for i, param in enumerate(output_params):
         ffmpeg_params["streams"].append((f"c:v:{i}","copy"))
     else:
         ffmpeg_params["streams"].append((f"s:v:{i}", f"{param['resx']}:{param['resy']}"))
-        ffmpeg_params["streams"].append((f"c:v:{i}", "libx264"))
+        ffmpeg_params["streams"].append((f"c:v:{i}", encoding_options['video_codec']))
         ffmpeg_params["streams"].append((f"b:v:{i}", f"{param['bitrate']}k"))
     var_stream_map += f"v:{i},a:{i} "
 ffmpeg_params["streams"].append(("var_stream_map", f'"{var_stream_map[:-1]}"'))
@@ -368,7 +371,7 @@ for param in (ffmpeg_params["inputenc"] + ffmpeg_params["mapping"] + ffmpeg_para
 print("Transcoding...")
 #print("debug")
 print(f"\033[31m{command}\033[0m")
-subprocess.run(command, shell=True)
+#subprocess.run(command, shell=True)
 
 print("Generating media manifest file...")
 media_manifest = {}
@@ -376,7 +379,7 @@ media_manifest.update(extended_info)
 media_manifest['resolutions'] = []
 for output in output_params:
     media_manifest['resolutions'].append(f"{output['resname']} @ {output['bitrate']}k")
-mfile = open(f"out/{output_name}.json","w")
+mfile = open(f"site/media/{output_name}.json","w")
 mfile.write(json.dumps(media_manifest))
 mfile.close()
 
