@@ -13,20 +13,21 @@ import tmdbsimple as tmdb
 import time
 import subprocess
 import json
+import pathlib
 
 # Possible output resolutions and their associated maximum bitrates.
 # Resolutions that are larger than the input media will be dropped.
 # An original quality stream will also be produced.
 # Output bitrate is clamped to input bitrate.
 output_resolutions = [
-    #RES   VRATE
+    #RES   VRATE  FORCE
     #[144,  1000],
-    #[240,  1000],
-    #[360,  2000],
-    [480,  3000],
-    [720,  6000],
-    [1080, 10000],
-    [2160, 20000]
+    #[240,  1000,  False],
+    #[360,  2000,  False],
+    [480,  3000,  False],
+    [720,  6000,  False],
+    [1080, 10000, True],
+    [2160, 20000, False]
 ]
 
 # Encoding options
@@ -36,11 +37,11 @@ encoding_options = {
     # placebo (do not use)]
     "preset": "veryslow",
     # Keyframes interval, spec says 2 seconds
-    "keyframes_interval": 5,
+    "keyframes_interval": 2,
     # Seconds per HLS segment, should be a multiple of `keyframes_interval`
     "segment_size": 10,
     # Audio bitrate
-    "audio_bitrate": "350k",
+    "audio_bitrate": "500k",
     # Codec
     "video_codec": "libx264"
 }
@@ -56,7 +57,6 @@ parser.add_argument('output', metavar="o", type=str,
     help="media output name without extension")
 
 args = parser.parse_args()
-print(args)
 
 #######################
 # Validate user input #
@@ -84,7 +84,7 @@ print(f"Input file contains \033[32m{len(input_media_info.tracks)}\033[0m tracks
 for i, track in enumerate(input_media_info.tracks):
     print(f"  \033[32m{i+1}\033[0m: {track.track_type}")
     if track.track_type == "Video":
-        bitrate = track.bit_rate or track.nominal_bit_rate or -1000
+        bitrate = track.bit_rate or track.nominal_bit_rate or 10000000
         fps = float(track.frame_rate) if track.frame_rate else 24.0
         print(f"    Resolution: \033[33m{track.width}x{track.height}\033[0m")
         print(f"    Bitrate: \033[33m{int(bitrate/1000)}kbps\033[0m")
@@ -93,9 +93,11 @@ for i, track in enumerate(input_media_info.tracks):
         print(f"    Codec: \033[33m{track.codec_id_url}\033[0m")
         #print(dir(track))
         normalized_media_info.append({
+            "type": "video",
+            "num": i,
             "width": track.width,
             "height": track.height,
-            "bitrate": track.bit_rate or track.nominal_bit_rate,
+            "bitrate": track.bit_rate or track.nominal_bit_rate or 10000000,
             "fps": fps,
             "id": track.track_id - 1
         })
@@ -105,13 +107,17 @@ for i, track in enumerate(input_media_info.tracks):
         print(f"    Bitrate: \033[33m{int(bitrate/1000)}kbps\033[0m")
         print(f"    Track ID: \033[33m{track.track_id}\033[0m")
         normalized_media_info.append({
+            "type": "audio",
+            "num": i,
             "language": track.language,
-            "bitrate": track.bit_Rate or track.nominal_bit_rate,
+            "bitrate": track.bit_rate or track.nominal_bit_rate,
             "id": track.track_id - 1
         })
     elif track.track_type == "Text":
         print(f"    Language: \033[33m{track.language}\033[0m")
         normalized_media_info.append({
+            "type": "text",
+            "num": i,
             "language": track.language
         })
     else:
@@ -130,7 +136,31 @@ def getyn():
             return "Y"
         elif c == "N" or c == "n":
             return "N"
+# Attempt automatic track selection
+autoselected = False
+if True:
+    duplicate = False
+    video = None
+    audio = None
+    for track in normalized_media_info:
+        if track is None: continue
+        if track['type'] == 'audio':
+            if audio is not None:
+                duplicate = True
+            else:
+                audio = track['num']
+        if track['type'] == 'video':
+            if video is not None:
+                duplicate = True
+            else:
+                video = track['num']
+    if audio is not None and video is not None and not duplicate:
+        selected_tracks['Audio'] = [audio]
+        selected_tracks['Video'] = [video]
+        autoselected = True
+        print(f"Automatically selected video track \033[32m{video+1}\033[0m and audio track \033[32m{audio+1}\033[0m")
 while True:
+    if autoselected: break
     selected_tracks_raw = input("Select tracks: \033[32m")
     print("\033[0m",end="")
     tracks = {
@@ -299,10 +329,11 @@ if extended_info['categories'] == "":
 video_track = normalized_media_info[selected_tracks["Video"][0]]
 audio_track = normalized_media_info[selected_tracks["Audio"][0]]
 output_params = []
-for _resolution, _bitrate in output_resolutions:
-    if _resolution - 100 > video_track["height"]: continue
+for _resolution, _bitrate, _force in output_resolutions:
+    if _resolution - 100 > video_track["height"] and not _force: continue
     bitrate = min(_bitrate, video_track["bitrate"] / 1000)
     resy = min(_resolution, video_track["height"])
+    resx = int(video_track["width"] * (resy / video_track["height"]))
     if resx % 2 != 0:
         resx -= 1
     if resy % 2 != 0:
@@ -315,6 +346,8 @@ for _resolution, _bitrate in output_resolutions:
         "bitrate": bitrate
     })
     print(f"\033[33m{resy}p\033[0m @ \033[33m{bitrate}k\033[0m")
+
+rootpath = pathlib.Path(__file__).parent.absolute()
 
 # The ffmpeg command can be broken down into a few major parts.
 # `inputenc`: Input and encoding arguments specyf input files and general encoding parameters
@@ -331,19 +364,24 @@ ffmpeg_params = {
 }
 
 ffmpeg_params["inputenc"].append((None,"-hide_banner -loglevel warning -stats"))
-ffmpeg_params["inputenc"].append(("i", input_file_name))
-ffmpeg_params["inputenc"].append(("i", "testmedia/sound.mkv")) # REMOVE ME
+ffmpeg_params["inputenc"].append(("analyzeduration","15000000")) # 15 seconds
+ffmpeg_params["inputenc"].append(("probesize","15000000")) # 15 MB
+ffmpeg_params["inputenc"].append(("i", f'"{input_file_name}"'))
 ffmpeg_params["inputenc"].append(("g", math.ceil(video_track['fps'] * encoding_options['keyframes_interval'])))
 ffmpeg_params["inputenc"].append(("sc_threshold", 0))
 ffmpeg_params["inputenc"].append(("c:a", "aac")) # aac required for mp4
 ffmpeg_params["inputenc"].append(("b:a", encoding_options['audio_bitrate'])) # good enough
+ffmpeg_params["inputenc"].append(("pix_fmt", "yuv420p"))
+#ffmpeg_params["inputenc"].append(("to", "00:05:00.00"))
+ffmpeg_params["output"].append(("max_muxing_queue_size", "1500"))
+ffmpeg_params["output"].append(("ac", "2")) # Downmix to 2 channel audio
 ffmpeg_params["output"].append(("master_pl_name", f"{output_name}.m3u8")) # TODO: customize
 ffmpeg_params["output"].append(("f", "hls"))
 ffmpeg_params["output"].append(("hls_time", encoding_options["segment_size"]))
 ffmpeg_params["output"].append(("hls_list_size", 0)) # 0 is unlimited
-ffmpeg_params["output"].append(("hls_segment_filename", f"site/media/{output_name}_%v/seq%d.ts"))
-ffmpeg_params["output"].append(("hls_playlist_type", "vod"))
-ffmpeg_params["output"].append((None, f"site/media/{output_name}_%v/index.m3u8"))
+ffmpeg_params["output"].append(("hls_segment_filename", f"{rootpath}/site/media/{output_name}/q_%v/seg%d.ts"))
+ffmpeg_params["output"].append(("hls_playlist_type", "event"))
+ffmpeg_params["output"].append((None, f"{rootpath}/site/media/{output_name}/q_%v/index.m3u8"))
 
 # Generate mappings
 var_stream_map = ""
@@ -358,35 +396,41 @@ for i, param in enumerate(output_params):
     #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Resolution\\: {param['resx']}x{param['resy']}':fontcolor=#c0212f:fontsize=90:x=2240:y=1640")
     #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Frame\\: %{{frame_num}}':fontcolor=black:fontsize=90:x=2245:y=1745")
     #filters.append(f"drawtext=fontfile=/home/nicholas/.local/share/fonts/Roboto-Medium.ttf:text='Frame\\: %{{frame_num}}':fontcolor=#c0212f:fontsize=90:x=2240:y=1740")
-    filters.append(f"scale=-1:{param['resy']}")
+    filters.append(f"scale={param['resx']}:{param['resy']}")
     filterstr = ",".join(filters)
-    filterstr = f"[0:{video_track['id']}]{filterstr}[vtrack{i}];[0:{audio_track['id']}]anull-[atrack{i}]"
+    filterstr = f"[0:{video_track['id']}]{filterstr}[vtrack{i}];[0:{audio_track['id']}]anull[atrack{i}]"
     #filterstr = f"[0:v]{filterstr}[vtrack{i}];[1:a]anull[atrack{i}]"
     ffmpeg_params["filters"].append(filterstr)
     ffmpeg_params["mapping"].append(("map", f"[vtrack{i}]"))
     ffmpeg_params["mapping"].append(("map", f"[atrack{i}]"))
     ffmpeg_params["streams"].append((f"c:v:{i}", encoding_options['video_codec']))
+    ffmpeg_params["streams"].append(("preset", encoding_options['preset']))
     ffmpeg_params["streams"].append((f"b:v:{i}", f"{param['bitrate']}k"))
     var_stream_map += f"v:{i},a:{i} "
 filternet = ";".join(ffmpeg_params["filters"])
 print(filternet)
 ffmpeg_params["streams"].append(("filter_complex", f'"{filternet}"'))
 ffmpeg_params["streams"].append(("var_stream_map", f'"{var_stream_map[:-1]}"'))
-ffmpeg_params["streams"].append(("to", "01:00:00.00"))
 
 
 print("Generating command...")
-command = f"/usr/bin/ffmpeg "
+command = f"time nice -n 19 /usr/bin/ffmpeg "
 for param in (ffmpeg_params["inputenc"] + ffmpeg_params["mapping"] + ffmpeg_params["streams"] + ffmpeg_params["output"]):
     if param[0] is not None:
         command += f"-{param[0]} {param[1]} "
     else:
         command += f"{param[1]} "
 
-print("Transcoding...")
 #print("debug")
 print(f"\033[31m{command}\033[0m")
-subprocess.run(command, shell=True)
+print("Write to job file?")
+if getyn() == "Y":
+    jobfile = open('job.sh','a')
+    jobfile.write(f"echo Transcoding \033[33m{output_name}\033[0m...\n")
+    jobfile.write(f"time {command}\n")
+else:
+    print("Transcoding...")
+    subprocess.run(command, shell=True)
 
 print("Generating media manifest file...")
 media_manifest = {}
@@ -394,7 +438,7 @@ media_manifest.update(extended_info)
 media_manifest['resolutions'] = []
 for output in output_params:
     media_manifest['resolutions'].append(f"{output['resname']} @ {output['bitrate']}k")
-mfile = open(f"site/media/{output_name}.json","w")
+mfile = open(f"{rootpath}/site/media/{output_name}.json","w")
 mfile.write(json.dumps(media_manifest))
 mfile.close()
 
