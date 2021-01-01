@@ -24,10 +24,10 @@ output_resolutions = [
     #[144,  1000],
     #[240,  1000,  False],
     #[360,  2000,  False],
-    [480,  3000,  False],
+    #[480,  3000,  False],
     [720,  6000,  False],
     [1080, 10000, True],
-    [2160, 20000, False]
+    [2160, 25000, False]
 ]
 
 # Encoding options
@@ -39,11 +39,11 @@ encoding_options = {
     # Keyframes interval, spec says 2 seconds
     "keyframes_interval": 2,
     # Seconds per HLS segment, should be a multiple of `keyframes_interval`
-    "segment_size": 10,
+    "segment_size": 6,
     # Audio bitrate
     "audio_bitrate": "500k",
     # Codec
-    "video_codec": "libx264"
+    "video_codec": "libx265"
 }
 
 ##############################
@@ -254,6 +254,14 @@ while True:
     print("\033[0m",end="")
 
     if raw_movie_title == "manual": break
+    if raw_movie_title == "skip":
+        extended_info['title'] = "skipped"
+        extended_info['year'] = 0000
+        extended_info['poster'] = "skipped"
+        extended_info['rating'] = -1
+        extended_info['overview'] = "skipped"
+        extended_info['categories'] = "skipped"
+        break
 
     print("Executing query...")
     results = []
@@ -332,6 +340,8 @@ output_params = []
 for _resolution, _bitrate, _force in output_resolutions:
     if _resolution - 100 > video_track["height"] and not _force: continue
     bitrate = min(_bitrate, video_track["bitrate"] / 1000)
+    # TESTING OVERRIDE - ALWAYS USE PRESET BITRATE
+    bitrate = _bitrate
     resy = min(_resolution, video_track["height"])
     resx = int(video_track["width"] * (resy / video_track["height"]))
     if resx % 2 != 0:
@@ -372,7 +382,7 @@ ffmpeg_params["inputenc"].append(("sc_threshold", 0))
 ffmpeg_params["inputenc"].append(("c:a", "aac")) # aac required for mp4
 ffmpeg_params["inputenc"].append(("b:a", encoding_options['audio_bitrate'])) # good enough
 ffmpeg_params["inputenc"].append(("pix_fmt", "yuv420p"))
-#ffmpeg_params["inputenc"].append(("to", "00:05:00.00"))
+ffmpeg_params["inputenc"].append(("to", "00:05:00.00"))
 ffmpeg_params["output"].append(("max_muxing_queue_size", "1500"))
 ffmpeg_params["output"].append(("ac", "2")) # Downmix to 2 channel audio
 ffmpeg_params["output"].append(("master_pl_name", f"{output_name}.m3u8")) # TODO: customize

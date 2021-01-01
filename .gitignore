@@ -7,3 +7,8 @@ updatepi.sh
 
 # Ignore generated media
 out
+
+# Ignore temporary and working files
+autotranscode.py
+movies.txt
+test.py
