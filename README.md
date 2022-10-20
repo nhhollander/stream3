@@ -6,7 +6,7 @@ Version 1 was conceptually flawed and had to be put down.
 
 Version 2 was great until the server was struck by lightning.  It was completely obliterated.
 
-Version 3 will be amazing.
+Version 3 will be amazing. (Update: I gave up)
 
 ## Project Breakdown
 
